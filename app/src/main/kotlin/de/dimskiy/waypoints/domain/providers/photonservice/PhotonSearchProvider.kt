@@ -68,7 +68,7 @@ class PhotonSearchProvider @Inject constructor(
             )
 
         } catch (e: Exception) {
-            Timber.e(e, "Exception during api call")
+            Timber.w(e, "Exception during api call")
             DataResult.error(DomainError.NetworkError(e))
         }
 
