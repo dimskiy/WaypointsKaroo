@@ -1,0 +1,19 @@
+<resources>
+    <string name="photon_service_name" translatable="false">"Photon by Komoot"</string>
+    <string name="photon_api_base_url" translatable="false">"https://photon.komoot.io/"</string>
+
+    <string name="app_name">Waypoints</string>
+    <string name="widget_search_placeholder">Type your search</string>
+    <string name="search_button_description">Open search</string>
+    <string name="back_button_description">Go back</string>
+    <string name="error_msg_generic">Something went wrong :/</string>
+    <string name="error_msg_network_timeout">Internet request timeout</string>
+    <string name="error_msg_no_location">Cannot find your GPS location.\nTry to move around</string>
+    <string name="message_nothing_gound">No results yet</string>
+    <string name="img_description_bookmarked_sign">Bookmarked sign</string>
+    <string name="message_no_bookmarks">No waypoints saved.\nPlease start with search</string>
+    <string name="label_search_by_location">From current location</string>
+    <string name="label_search_by_location_explain">Shares device location with %1s</string>
+    <string name="message_finding_the_location">Discovering device location</string>
+    <string name="description_navigate_back">Navigate back</string>
+</resources>
