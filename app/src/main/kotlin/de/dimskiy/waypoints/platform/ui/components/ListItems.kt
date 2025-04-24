@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
@@ -15,12 +17,14 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
@@ -32,9 +36,12 @@ import com.example.ssjetpackcomposeswipeableview.SwipeAbleItemView
 import com.example.ssjetpackcomposeswipeableview.SwipeDirection
 import de.dimskiy.waypoints.R
 import de.dimskiy.waypoints.domain.model.Waypoint
+import de.dimskiy.waypoints.platform.ui.GetDistanceFormatted
 import de.dimskiy.waypoints.platform.ui.PreviewOnKaroo2
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.UserIntent
+import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.WaypointWithDistance
 import de.dimskiy.waypoints.platform.ui.theme.AppTheme
+import java.util.Locale
 
 //region "Composable previews"
 @Composable
@@ -42,21 +49,25 @@ import de.dimskiy.waypoints.platform.ui.theme.AppTheme
 fun BookmarkedItemFull() {
     AppTheme(darkTheme = true) {
         DiscoveredListItem(
-            model = Waypoint.Stored(
-                id = 1,
-                serverId = "11",
-                name = "Awesome place",
-                latitude = 10.0,
-                longitude = 11.5,
-                address = Waypoint.Address(
-                    country = "DE",
-                    city = "Munich",
-                    zip = "12345",
-                    street = "RosenheimerStr",
-                    qualifier1 = "something",
-                    qualifier2 = "nice",
+            model = WaypointWithDistance(
+                distanceToDeviceKm = 12.56,
+                waypoint = Waypoint.Stored(
+                    id = 1,
+                    serverId = "11",
+                    name = "Awesome place with longer name",
+                    latitude = 10.0,
+                    longitude = 11.5,
+                    address = Waypoint.Address(
+                        country = "DE",
+                        city = "Munich",
+                        zip = "12345",
+                        street = "RosenheimerStr",
+                        qualifier1 = "something",
+                        qualifier2 = "nice",
+                    )
                 )
             ),
+            locale = Locale.US,
             onUserIntent = {}
         )
     }
@@ -92,20 +103,24 @@ fun BookmarkedItemShortAddress() {
 fun SearchResultItemFull() {
     AppTheme(darkTheme = true) {
         DiscoveredListItem(
-            model = Waypoint.Discovered(
-                serverId = "11",
-                name = "Awesome place",
-                latitude = 10.0,
-                longitude = 11.5,
-                address = Waypoint.Address(
-                    country = "DE",
-                    city = "Munich",
-                    zip = "12345",
-                    street = "RosenheimerStr",
-                    qualifier1 = "something",
-                    qualifier2 = "nice",
+            model = WaypointWithDistance(
+                distanceToDeviceKm = null,
+                waypoint = Waypoint.Discovered(
+                    serverId = "11",
+                    name = "Awesome place",
+                    latitude = 10.0,
+                    longitude = 11.5,
+                    address = Waypoint.Address(
+                        country = "DE",
+                        city = "Munich",
+                        zip = "12345",
+                        street = "RosenheimerStr",
+                        qualifier1 = "something",
+                        qualifier2 = "nice",
+                    )
                 )
             ),
+            locale = Locale.US,
             onUserIntent = {}
         )
     }
@@ -218,17 +233,18 @@ fun WaypointBookmarkItem(
 
 @Composable
 fun DiscoveredListItem(
-    model: Waypoint,
+    model: WaypointWithDistance,
     onUserIntent: (UserIntent) -> Unit,
+    locale: Locale = remember { Locale.getDefault() },
     modifier: Modifier = Modifier
 ) {
-    val qualifiersInfo = remember { model.address.getQualifiersFormatted() }
-    val addressInfo = remember { model.address.getFormatted() }
+    val qualifiersInfo = remember { model.waypoint.address.getQualifiersFormatted() }
+    val addressInfo = remember { model.waypoint.address.getFormatted() }
 
     ListItem(
         leadingContent = {
             Image(
-                imageVector = if (model is Waypoint.Stored) {
+                imageVector = if (model.waypoint is Waypoint.Stored) {
                     Icons.Filled.Favorite
                 } else {
                     Icons.Filled.FavoriteBorder
@@ -237,15 +253,15 @@ fun DiscoveredListItem(
                 contentDescription = stringResource(R.string.img_description_bookmarked_sign),
                 modifier = Modifier.clickable(
                     enabled = true,
-                    onClick = { onUserIntent(UserIntent.ToggleBookmark(model)) }
+                    onClick = { onUserIntent(UserIntent.ToggleBookmark(model.waypoint)) }
                 )
             )
         },
         headlineContent = {
             Text(
-                text = model.name,
+                text = model.waypoint.name,
                 style = MaterialTheme.typography.titleMedium,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 softWrap = true
             )
@@ -268,6 +284,28 @@ fun DiscoveredListItem(
                 )
             }
         },
+        trailingContent = {
+            if (model.distanceToDeviceKm != null) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        imageVector = Icons.Default.Place,
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary),
+                        contentDescription = "",
+                        modifier = Modifier.size(20.dp)
+                    )
+
+                    Text(
+                        text = GetDistanceFormatted(
+                            distanceKm = model.distanceToDeviceKm,
+                            locale = locale
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.padding(top = 5.dp)
+                    )
+                }
+            }
+        },
         shadowElevation = 4.dp,
         colors = ListItemDefaults.colors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
@@ -275,33 +313,6 @@ fun DiscoveredListItem(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .clickable { onUserIntent(UserIntent.ClickWaypoint(model)) }
+            .clickable { onUserIntent(UserIntent.ClickWaypoint(model.waypoint)) }
     )
-}
-
-@Composable
-private fun LeadingIcon(
-    showBookmarkIcon: Boolean,
-    model: Waypoint,
-    onUserIntent: (UserIntent) -> Unit,
-) {
-    if (showBookmarkIcon)
-        Image(
-            imageVector = if (model is Waypoint.Stored) {
-                Icons.Filled.Favorite
-            } else {
-                Icons.Filled.FavoriteBorder
-            },
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary),
-            contentDescription = stringResource(R.string.img_description_bookmarked_sign),
-            modifier = Modifier.clickable(
-                enabled = true,
-                onClick = {
-                    onUserIntent(
-                        UserIntent.ToggleBookmark(model)
-                    )
-                }
-            )
-        )
-
 }

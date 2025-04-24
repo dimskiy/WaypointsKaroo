@@ -35,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.dimskiy.waypoints.DataResult
 import de.dimskiy.waypoints.R
-import de.dimskiy.waypoints.domain.model.Waypoint
 import de.dimskiy.waypoints.platform.ui.GetInputLanguageCode
 import de.dimskiy.waypoints.platform.ui.components.DiscoveredListItem
 import de.dimskiy.waypoints.platform.ui.components.ErrorContentWidget
@@ -43,6 +42,7 @@ import de.dimskiy.waypoints.platform.ui.components.InfoContentWidget
 import de.dimskiy.waypoints.platform.ui.components.LoadingContentWidget
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.SearchResponse
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.UserIntent
+import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.WaypointWithDistance
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -187,7 +187,7 @@ private fun SearchContent(
 
 @Composable
 private fun SearchResultList(
-    data: List<Waypoint>,
+    data: List<WaypointWithDistance>,
     onUserIntent: (UserIntent) -> Unit
 ) {
     if (data.isNotEmpty()) {

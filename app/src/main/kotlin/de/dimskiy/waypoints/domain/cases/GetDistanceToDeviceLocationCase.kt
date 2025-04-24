@@ -3,6 +3,7 @@ package de.dimskiy.waypoints.domain.cases
 import de.dimskiy.waypoints.domain.model.Waypoint
 import de.dimskiy.waypoints.domain.providers.SettingsProvider
 import de.dimskiy.waypoints.platform.di.BaseModule
+import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.WaypointWithDistance
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -21,23 +22,29 @@ class GetDistanceToDeviceLocationCase @Inject constructor(
     @BaseModule.DispatcherDefault private val coroutineDispatcher: CoroutineDispatcher
 ) {
 
-    suspend operator fun invoke(waypoints: List<Waypoint>): List<Pair<Waypoint, Double?>> = withContext(coroutineDispatcher) {
-        val deviceLastLocation = settingsProvider.observeLastLocation().first()
-            ?: return@withContext waypoints.map { it to null }
+    suspend operator fun invoke(waypoints: List<Waypoint>): List<WaypointWithDistance> =
+        withContext(coroutineDispatcher) {
+            val deviceLastLocation = settingsProvider.observeLastLocation().first()
+                ?: return@withContext waypoints.map {
+                    WaypointWithDistance(
+                        distanceToDeviceKm = null,
+                        waypoint = it
+                    )
+                }
 
-        waypoints.map { waypoint ->
-            val distance = getGreatCircleDistance(
-                lat1 = waypoint.latitude,
-                lon1 = waypoint.longitude,
-                lat2 = deviceLastLocation.latitude,
-                lon2 = deviceLastLocation.longitude
-            )
-            Timber.d("Distance ($distance) for $waypoint")
-            waypoint to distance
+            waypoints.map { waypoint ->
+                val distance = getGreatCircleDistanceKm(
+                    lat1 = waypoint.latitude,
+                    lon1 = waypoint.longitude,
+                    lat2 = deviceLastLocation.latitude,
+                    lon2 = deviceLastLocation.longitude
+                )
+                Timber.d("Distance ($distance) for $waypoint")
+                WaypointWithDistance(distance, waypoint)
+            }
         }
-    }
 
-    private fun getGreatCircleDistance(
+    private fun getGreatCircleDistanceKm(
         lat1: Double,
         lon1: Double,
         lat2: Double,

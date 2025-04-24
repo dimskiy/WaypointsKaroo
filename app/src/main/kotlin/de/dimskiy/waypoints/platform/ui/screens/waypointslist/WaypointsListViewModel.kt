@@ -13,6 +13,7 @@ import de.dimskiy.waypoints.domain.model.Waypoint
 import de.dimskiy.waypoints.domain.providers.SettingsProvider
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.SearchResponse
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.UserIntent
+import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.WaypointWithDistance
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.WaypointsListState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,7 +57,7 @@ class WaypointsListViewModel @Inject constructor(
         WaypointsListState(
             bookmarks = bookmarks,
             searchResponse = SearchResponse(
-                dataResult = searchResult.mapResultSuspend { getSorted(it) },
+                dataResult = searchResult.mapResultSuspend { getUpdatedWithDistance(it) },
                 providerName = observeSearchResults.providerName,
                 geoSearchEnabled = geoSearchEnabled
             )
@@ -76,16 +77,16 @@ class WaypointsListViewModel @Inject constructor(
         )
     )
 
-    private suspend fun getSorted(waypoints: List<Waypoint>): List<Waypoint> {
+    private suspend fun getUpdatedWithDistance(waypoints: List<Waypoint>): List<WaypointWithDistance> {
         val isGeoSearchEnabled = settingsProvider.observeGeoSearchEnabled().first()
 
         return if (isGeoSearchEnabled) {
             val waypointsWithDistances = getDistanceToDeviceLocation(waypoints)
-            waypointsWithDistances.sortedBy { (_, distance) ->
-                distance
-            }.map { (waypoint, _) -> waypoint }
+            waypointsWithDistances.sortedBy { it.distanceToDeviceKm }
         } else {
-            waypoints.sortedBy(Waypoint::name)
+            waypoints.map { waypoint ->
+                WaypointWithDistance(null, waypoint)
+            }.sortedBy { it.waypoint.name }
         }
     }
 
@@ -95,7 +96,11 @@ class WaypointsListViewModel @Inject constructor(
         when (intent) {
             is UserIntent.ClickWaypoint -> onWaypointClick(intent.model)
             is UserIntent.DismissWaypoint -> onWaypointDismiss(intent.model)
-            is UserIntent.PerformSearch -> onSearchRequested(intent.query, intent.resultsLanguageCode)
+            is UserIntent.PerformSearch -> onSearchRequested(
+                intent.query,
+                intent.resultsLanguageCode
+            )
+
             is UserIntent.ToggleBookmark -> onBookmarkToggle(intent.model)
             is UserIntent.ToggleGeoSearch -> onGeoSearchToggle(intent.isEnabled)
         }

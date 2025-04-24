@@ -16,4 +16,8 @@
     <string name="label_search_by_location_explain">Shares device location with %1s</string>
     <string name="message_finding_the_location">Discovering device location</string>
     <string name="description_navigate_back">Navigate back</string>
+    <string name="distance_miles_formatted">%1s\nmi</string>
+    <string name="distance_km_formatted">%1s\nkm</string>
+    <string name="distance_feet_formatted">%1s\nft</string>
+    <string name="distance_meters_formatted">%1s\nm</string>
 </resources>
