@@ -6,10 +6,11 @@ import de.dimskiy.waypoints.domain.model.Waypoint
 
 interface WaypointsSearchProvider {
 
-    suspend fun searchWaypoints(query: String): DataResult<List<Waypoint.Discovered>>
+    suspend fun searchWaypoints(query: String, resultsLanguageCode: String): DataResult<List<Waypoint.Discovered>>
 
     suspend fun searchWaypointsWithLocation(
         query: String,
+        resultsLanguageCode: String,
         location: DeviceLocation
     ): DataResult<List<Waypoint.Discovered>>
 

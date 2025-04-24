@@ -4,7 +4,7 @@ import de.dimskiy.waypoints.domain.model.Waypoint
 
 sealed class UserIntent {
 
-    data class PerformSearch(val query: String) : UserIntent()
+    data class PerformSearch(val query: String, val resultsLanguageCode: String) : UserIntent()
 
     data class ToggleBookmark(val model: Waypoint) : UserIntent()
 

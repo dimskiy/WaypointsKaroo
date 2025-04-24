@@ -95,19 +95,19 @@ class WaypointsListViewModel @Inject constructor(
         when (intent) {
             is UserIntent.ClickWaypoint -> onWaypointClick(intent.model)
             is UserIntent.DismissWaypoint -> onWaypointDismiss(intent.model)
-            is UserIntent.PerformSearch -> onSearchRequested(intent.query)
+            is UserIntent.PerformSearch -> onSearchRequested(intent.query, intent.resultsLanguageCode)
             is UserIntent.ToggleBookmark -> onBookmarkToggle(intent.model)
             is UserIntent.ToggleGeoSearch -> onGeoSearchToggle(intent.isEnabled)
         }
     }
 
-    private fun onSearchRequested(query: String) {
+    private fun onSearchRequested(query: String, resultsLanguageCode: String) {
         if (query.isEmpty()) {
             waypointsSearchJob.cancel()
             searchResults.update { DataResult.ready(emptyList()) }
         } else {
             waypointsSearchJob = viewModelScope.launch {
-                observeSearchResults(query).collectLatest(searchResults::emit)
+                observeSearchResults(query, resultsLanguageCode).collectLatest(searchResults::emit)
             }
         }
     }

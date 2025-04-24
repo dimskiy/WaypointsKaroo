@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import de.dimskiy.waypoints.DataResult
 import de.dimskiy.waypoints.R
 import de.dimskiy.waypoints.domain.model.Waypoint
+import de.dimskiy.waypoints.platform.ui.GetInputLanguageCode
 import de.dimskiy.waypoints.platform.ui.components.DiscoveredListItem
 import de.dimskiy.waypoints.platform.ui.components.ErrorContentWidget
 import de.dimskiy.waypoints.platform.ui.components.InfoContentWidget
@@ -54,11 +55,12 @@ fun SearchWidget(
 ) {
     var query by remember { mutableStateOf("") }
     var isSearchActive by remember { mutableStateOf(false) }
+    val inputLanguageCode = GetInputLanguageCode()
 
     val searchAction = {
         keyboardController?.hide()
         onUserIntent(
-            UserIntent.PerformSearch(query)
+            UserIntent.PerformSearch(query, inputLanguageCode)
         )
     }
 

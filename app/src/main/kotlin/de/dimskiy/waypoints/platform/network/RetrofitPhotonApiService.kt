@@ -3,6 +3,7 @@ package de.dimskiy.waypoints.platform.network
 import de.dimskiy.waypoints.domain.providers.photonservice.FeaturesCollectionDto
 import de.dimskiy.waypoints.domain.providers.photonservice.PhotonApiService
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface RetrofitPhotonApiService : PhotonApiService {
@@ -10,12 +11,14 @@ interface RetrofitPhotonApiService : PhotonApiService {
     @GET("api/")
     override suspend fun getFeaturedLocations(
         @Query("q") query: String,
+        @Header("Accept-Language") resultsLanguageCode: String,
         @Query("limit") limit: Int
     ): FeaturesCollectionDto
 
     @GET("api/")
     override suspend fun getFeaturedLocationsWithGeo(
         @Query("q") query: String,
+        @Header("Accept-Language") resultsLanguageCode: String,
         @Query("limit") limit: Int,
         @Query("zoom") zoom: Int,
         @Query("location_bias_scale") locationBiasScale: Double,

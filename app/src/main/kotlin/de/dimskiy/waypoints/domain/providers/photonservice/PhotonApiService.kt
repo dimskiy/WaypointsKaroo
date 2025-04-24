@@ -5,12 +5,14 @@ interface PhotonApiService {
     /*'api/'*/
     suspend fun getFeaturedLocations(
         /*'q'*/ query: String,
+        /*Header "Accept-Language"*/ resultsLanguageCode: String,
         /*'limit'*/ limit: Int
     ): FeaturesCollectionDto
 
     /*'api/'*/
     suspend fun getFeaturedLocationsWithGeo(
         /*'q'*/ query: String,
+        /*Header "Accept-Language"*/ resultsLanguageCode: String,
         /*'limit'*/ limit: Int,
         /*'zoom'*/ zoom: Int,
         /*location_bias_scale*/ locationBiasScale: Double,

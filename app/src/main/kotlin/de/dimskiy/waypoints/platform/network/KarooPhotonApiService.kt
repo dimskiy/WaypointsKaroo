@@ -30,12 +30,22 @@ class KarooPhotonApiService @Inject constructor(
 
     private val gson = Gson()
 
-    override suspend fun getFeaturedLocations(query: String, limit: Int): FeaturesCollectionDto {
+    override suspend fun getFeaturedLocations(
+        query: String,
+        resultsLanguageCode: String,
+        limit: Int
+    ): FeaturesCollectionDto {
         return callbackFlow {
             Timber.d("Simple locations discovery START...")
             karooServiceProvider.ensureConnected { service ->
                 val url = "${baseUrl}api/?q=${query.encoded()}&limit=$limit"
-                send(runRequest(url, service))
+                send(
+                    runRequest(
+                        url = url,
+                        resultsLanguageCode = resultsLanguageCode,
+                        karooService = service
+                    )
+                )
             }
             Timber.d("Simple locations discovery FINISHED")
             awaitCancellation()
@@ -44,6 +54,7 @@ class KarooPhotonApiService @Inject constructor(
 
     override suspend fun getFeaturedLocationsWithGeo(
         query: String,
+        resultsLanguageCode: String,
         limit: Int,
         zoom: Int,
         locationBiasScale: Double,
@@ -55,7 +66,13 @@ class KarooPhotonApiService @Inject constructor(
             karooServiceProvider.ensureConnected { service ->
                 val url =
                     "${baseUrl}api/?q=${query.encoded()}&zoom=$zoom&location_bias_scale=$locationBiasScale&lat=$lat&lon=$lon&limit=$limit"
-                send(runRequest(url, service))
+                send(
+                    runRequest(
+                        url = url,
+                        resultsLanguageCode = resultsLanguageCode,
+                        karooService = service
+                    )
+                )
             }
             Timber.d("Geo-based locations discovery FINISHED")
             awaitCancellation()
@@ -70,6 +87,7 @@ class KarooPhotonApiService @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun runRequest(
         url: String,
+        resultsLanguageCode: String,
         karooService: KarooSystemService
     ): FeaturesCollectionDto = suspendCancellableCoroutine<FeaturesCollectionDto> { continuation ->
         Timber.d("Request -> : $url")
@@ -79,6 +97,7 @@ class KarooPhotonApiService @Inject constructor(
             params = OnHttpResponse.MakeHttpRequest(
                 method = "GET",
                 url = url,
+                headers = mapOf("Accept-Language" to resultsLanguageCode),
                 waitForConnection = false
             ),
             onError = {

@@ -29,11 +29,13 @@ class PhotonSearchProvider @Inject constructor(
 ) : WaypointsSearchProvider {
 
     override suspend fun searchWaypoints(
-        query: String
+        query: String,
+        resultsLanguageCode: String
     ): DataResult<List<Waypoint.Discovered>> = withContext(coroutineDispatcher) {
         runCatchingWithTimeout {
             photonApiService.getFeaturedLocations(
                 query = query,
+                resultsLanguageCode = resultsLanguageCode,
                 limit = RESULTS_NUMBER_LIMIT
             )
         }.mapResult { it.features.mapNotNull(::mapToWaypoint) }
@@ -41,11 +43,13 @@ class PhotonSearchProvider @Inject constructor(
 
     override suspend fun searchWaypointsWithLocation(
         query: String,
+        resultsLanguageCode: String,
         location: DeviceLocation
     ): DataResult<List<Waypoint.Discovered>> = withContext(coroutineDispatcher) {
         runCatchingWithTimeout {
             photonApiService.getFeaturedLocationsWithGeo(
                 query = query,
+                resultsLanguageCode = resultsLanguageCode,
                 lat = location.latitude,
                 lon = location.longitude,
                 zoom = SEARCH_MAP_ZOOM_LVL,

@@ -33,19 +33,25 @@ class ObserveSearchResultsCase @Inject constructor(
     val providerName: String = searchProvider.getProviderName()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun invoke(query: String): Flow<DataResult<List<Waypoint>>> =
+    operator fun invoke(
+        query: String,
+        resultsLanguageCode: String
+    ): Flow<DataResult<List<Waypoint>>> =
         settingsProvider.observeGeoSearchEnabled().flatMapLatest { isGeoSearchEnabled ->
             if (isGeoSearchEnabled) {
-                searchWithLocationFlow(query)
+                searchWithLocationFlow(query, resultsLanguageCode)
             } else {
                 getSearchFlow {
-                    searchProvider.searchWaypoints(query)
+                    searchProvider.searchWaypoints(query, resultsLanguageCode)
                 }
             }
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun searchWithLocationFlow(query: String): Flow<DataResult<List<Waypoint>>> {
+    private fun searchWithLocationFlow(
+        query: String,
+        resultsLanguageCode: String
+    ): Flow<DataResult<List<Waypoint>>> {
         return settingsProvider.observeLastLocation().flatMapLatest { lastLocation ->
             if (isLastLocationObsolete(lastLocation)) {
                 Timber.d("Location cache obsolete - discovering new...")
@@ -64,7 +70,13 @@ class ObserveSearchResultsCase @Inject constructor(
 
                 is DataResult.Ready -> locationResult.data?.let { deviceLocation ->
                     Timber.d("Performing geo-search...")
-                    getSearchFlow { searchProvider.searchWaypointsWithLocation(query, deviceLocation) }
+                    getSearchFlow {
+                        searchProvider.searchWaypointsWithLocation(
+                            query = query,
+                            resultsLanguageCode = resultsLanguageCode,
+                            location = deviceLocation
+                        )
+                    }
                 } ?: flowOf(DataResult.error(DomainError.LocationServiceError()))
             }
         }
