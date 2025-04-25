@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="Primary">#FFE65100</color>
+    <color name="GreyBlue">#FF8293A6</color>
+
+    <color name="OnPrimary">#FFFFFFFF</color>
+    <color name="Secondary">#FF8E8E8E</color>
+    <color name="Tertiary">#FF4DB6AC</color>
+    <color name="Background">#FFFFFFFF</color>
+    <color name="Surface">#FFFAFAFA</color>
+</resources>

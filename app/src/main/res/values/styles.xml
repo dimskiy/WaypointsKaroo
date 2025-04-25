@@ -2,9 +2,9 @@
 <resources>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-        <item name="windowSplashScreenBackground">?attr/colorSurface</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_icon</item>
+        <item name="windowSplashScreenBackground">@color/Primary</item>
         <item name="postSplashScreenTheme">@style/Theme.AppCompat</item>
-        <item name="windowSplashScreenIconBackgroundColor">?attr/colorSurface</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/Primary</item>
     </style>
 </resources>

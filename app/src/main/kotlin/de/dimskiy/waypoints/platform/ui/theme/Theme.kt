@@ -5,36 +5,27 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.colorResource
+import de.dimskiy.waypoints.R
 
-val DarkColorScheme = darkColorScheme(
-    primary = PrimaryDark,
-    secondary = SecondaryDark,
-    tertiary = TertiaryDark,
-    background = BackgroundDark,
-    surface = SurfaceDark,
-    onPrimary = OnPrimaryDark,
+@Composable
+fun getDarkColorScheme() = darkColorScheme(
+    primary = colorResource(R.color.Primary),
+    secondary = colorResource(R.color.Secondary),
+    tertiary = colorResource(R.color.Tertiary),
+    background = colorResource(R.color.Background),
+    surface = colorResource(R.color.Surface),
+    onPrimary = colorResource(R.color.OnPrimary)
 )
 
-val LightColorScheme = lightColorScheme(
-    primary = PrimaryLight,
-    secondary = SecondaryLight,
-    tertiary = TertiaryLight,
-    background = BackgroundLight,
-    surface = SurfaceLight,
-    onPrimary = OnPrimaryLight,
-
-    /* Other default colors to override
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+@Composable
+fun getLightColorScheme() = lightColorScheme(
+    primary = colorResource(R.color.Primary),
+    secondary = colorResource(R.color.Secondary),
+    tertiary = colorResource(R.color.Tertiary),
+    background = colorResource(R.color.Background),
+    surface = colorResource(R.color.Surface),
+    onPrimary = colorResource(R.color.OnPrimary)
 )
 
 @Composable
@@ -43,8 +34,8 @@ fun AppTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> getDarkColorScheme()
+        else -> getLightColorScheme()
     }
 
     MaterialTheme(
