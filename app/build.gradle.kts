@@ -1,3 +1,4 @@
+import com.google.gson.JsonParser
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -13,6 +14,34 @@ plugins {
     alias(libs.plugins.google.crashlytics)
 }
 
+val generateKarooManifest by tasks.registering {
+    val inputFile = file("$rootDir/manifest-karoo-template.json")
+    val outputDir = layout.buildDirectory.dir("generated/assets")
+    val outputFile = outputDir.map { it.file("manifest-karoo.json") }
+
+    inputs.file(inputFile)
+    outputs.file(outputFile)
+
+    doLast {
+        val versionCode = project.properties["APP_VERSION_CODE"].toString().toInt()
+        val versionName = project.properties["APP_VERSION_NAME"].toString()
+        val packageName = project.properties["APPLICATION_ID"].toString()
+
+        val jsonContent = inputFile.readText()
+        val jsonElement = JsonParser.parseString(jsonContent)
+        val jsonObject = jsonElement.asJsonObject
+
+        jsonObject.addProperty("latestVersionCode", versionCode)
+        jsonObject.addProperty("latestVersion", versionName)
+        jsonObject.addProperty("packageName", packageName)
+
+        outputFile.get().asFile.parentFile.mkdirs()
+        outputFile.get().asFile.writeText(jsonObject.toString())
+
+        println("Karoo manifest generated: ${outputFile.get()}")
+    }
+}
+
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 if (keystorePropertiesFile.exists()) {
@@ -20,15 +49,15 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "de.dimskiy.waypoints"
+    namespace = project.properties["APPLICATION_ID"].toString()
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "de.dimskiy.waypoints"
+        applicationId = project.properties["APPLICATION_ID"].toString()
         minSdk = 23
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = project.properties["APP_VERSION_CODE"].toString().toInt()
+        versionName = project.properties["APP_VERSION_NAME"].toString()
     }
 
     signingConfigs {
@@ -80,6 +109,10 @@ android {
         resources {
             excludes += "META-INF/gradle/incremental.annotation.processors"
         }
+    }
+
+    tasks.named("assemble") {
+        dependsOn(generateKarooManifest)
     }
 }
 

@@ -31,6 +31,15 @@
                 android:name="de.dimskiy.waypoints.platform.LoggingInitializer"
                 android:value="androidx.startup" />
         </provider>
+
+        <meta-data
+            android:name="io.hammerhead.karooext.EXTENSION_INFO"
+            android:resource="@xml/karoo_extension_info" />
+
+        <meta-data
+            android:name="io.hammerhead.karooext.MANIFEST_URL"
+            android:value="https://github.com/dimskiy/WaypointsKaroo/releases/latest/download/manifest.json" />
+
     </application>
 
 </manifest>
