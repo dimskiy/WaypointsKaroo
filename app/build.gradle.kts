@@ -105,9 +105,8 @@ dependencies {
     implementation(libs.bundles.androidx.room)
     ksp(libs.androidx.room.compiler)
 
+    implementation(libs.google.gson)
     implementation(libs.swipeview.compose)
-
-    implementation(libs.bundles.retrofit)
     implementation(libs.timber)
 
     implementation(platform(libs.google.firebase.bom))
