@@ -14,34 +14,6 @@ plugins {
     alias(libs.plugins.google.crashlytics)
 }
 
-val generateKarooManifest by tasks.registering {
-    val inputFile = file("$rootDir/manifest-karoo-template.json")
-    val outputDir = layout.buildDirectory.dir("generated/assets")
-    val outputFile = outputDir.map { it.file("manifest-karoo.json") }
-
-    inputs.file(inputFile)
-    outputs.file(outputFile)
-
-    doLast {
-        val versionCode = project.properties["APP_VERSION_CODE"].toString().toInt()
-        val versionName = project.properties["APP_VERSION_NAME"].toString()
-        val packageName = project.properties["APPLICATION_ID"].toString()
-
-        val jsonContent = inputFile.readText()
-        val jsonElement = JsonParser.parseString(jsonContent)
-        val jsonObject = jsonElement.asJsonObject
-
-        jsonObject.addProperty("latestVersionCode", versionCode)
-        jsonObject.addProperty("latestVersion", versionName)
-        jsonObject.addProperty("packageName", packageName)
-
-        outputFile.get().asFile.parentFile.mkdirs()
-        outputFile.get().asFile.writeText(jsonObject.toString())
-
-        println("Karoo manifest generated: ${outputFile.get()}")
-    }
-}
-
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 if (keystorePropertiesFile.exists()) {
@@ -110,9 +82,88 @@ android {
             excludes += "META-INF/gradle/incremental.annotation.processors"
         }
     }
+}
 
-    tasks.named("assemble") {
-        dependsOn(generateKarooManifest)
+afterEvaluate {
+    val generateKarooAssetsManifest by tasks.registering {
+        val readmeFile = file("$rootDir/README.md")
+        if (!readmeFile.exists()) {
+            error("'${readmeFile.name}' not found - cannot generate Karoo manifest")
+        }
+
+        val manifestTemplateFile = file("$rootDir/manifest-karoo-template.json")
+        if (!manifestTemplateFile.exists()) {
+            error("'${manifestTemplateFile.name}' not found - cannot generate Karoo manifest")
+        }
+
+        val outputDir = layout.buildDirectory.dir("outputs/apk/release/assets")
+        val outputFile = outputDir.map { it.file("manifest-karoo.json") }
+
+        inputs.file(manifestTemplateFile)
+        outputs.file(outputFile)
+
+        val getSectionText: (String) -> String = { sectionName ->
+            val readmeLines = readmeFile.readLines()
+            val description = StringBuilder()
+
+            var isDescriptionStarted = false
+            for (line in readmeLines) {
+                val lineTrimmed = line.trim()
+                when {
+                    lineTrimmed == sectionName -> isDescriptionStarted = true
+                    isDescriptionStarted && lineTrimmed.contains("## ") -> break
+                    isDescriptionStarted -> description.appendLine(line)
+                    else -> {}
+                }
+            }
+            description.toString()
+        }
+
+        doLast {
+            val versionCode = project.properties["APP_VERSION_CODE"].toString().toInt()
+            val versionName = project.properties["APP_VERSION_NAME"].toString()
+            val packageName = project.properties["APPLICATION_ID"].toString()
+            val description = getSectionText("## Description")
+            val releaseNotes = getSectionText("## Release notes")
+
+            val jsonContent = manifestTemplateFile.readText()
+            val jsonElement = JsonParser.parseString(jsonContent)
+            val jsonObject = jsonElement.asJsonObject
+
+            jsonObject.addProperty("latestVersionCode", versionCode)
+            jsonObject.addProperty("latestVersion", versionName)
+            jsonObject.addProperty("packageName", packageName)
+            jsonObject.addProperty("description", description)
+            jsonObject.addProperty("releaseNotes", releaseNotes)
+
+            outputFile.get().asFile.parentFile.mkdirs()
+            outputFile.get().asFile.writeText(jsonObject.toString())
+
+            println("Karoo manifest generated: ${outputFile.get()}")
+        }
+    }
+
+    val copyAppIconToAssets by tasks.registering {
+        doLast {
+            val iconFile = file("src/main/res/mipmap-xxhdpi/ic_launcher.webp")
+            val destinationDir =
+                layout.buildDirectory.dir("outputs/apk/release/assets").get().asFile
+
+            if (!iconFile.exists()) {
+                error("No app icon found: '${iconFile.absolutePath}'")
+            }
+
+            destinationDir.mkdirs()
+            val destinationFileName = "app_icon.${iconFile.extension}"
+            iconFile.copyTo(File(destinationDir.path, destinationFileName), overwrite = true)
+
+            println("App icon '${iconFile.name}' copied to '${destinationDir.path}' as '$destinationFileName'")
+        }
+    }
+
+    tasks.named("assembleRelease") {
+        finalizedBy(generateKarooAssetsManifest)
+        finalizedBy(copyAppIconToAssets)
     }
 }
 

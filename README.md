@@ -17,3 +17,6 @@ You need to sideload the latest Waypoints' APK using the guide from Hammerhead:
 * Sideloading using Android Developer Mode (older Karoo 2 devices):
   * (Third-party guide on how to get everything set and ready)[https://www.dcrainmaker.com/2021/02/how-to-sideload-android-apps-on-your-hammerhead-karoo-1-karoo-2.html]
   * Use this command to install the APK: ```adb install <PATH_TO_APK>```
+
+## Release notes
+v1.0 - Initial release
