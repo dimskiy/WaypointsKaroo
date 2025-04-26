@@ -1,8 +1,8 @@
 {
   "label": "Waypoints",
   "packageName": "BUMPED BY GRADLE",
-  "iconUrl": "",
-  "latestApkUrl": "",
+  "iconUrl": "https://github.com/dimskiy/WaypointsKaroo/releases/latest/download/app_icon.webp",
+  "latestApkUrl": "https://github.com/dimskiy/WaypointsKaroo/releases/latest/download/app-release.apk",
   "latestVersion": "BUMPED BY GRADLE",
   "latestVersionCode": "BUMPED BY GRADLE",
   "developer": "Vadim Sinitskiy",

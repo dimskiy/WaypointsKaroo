@@ -1,0 +1,66 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Release-pipe
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Enter release tag (version name)'
+        required: true
+        default: 'v1.0'
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Decode Keystore file
+        run: |
+          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > app/keystore.jks
+
+      - name: Decode google-services.json
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Run Unit Tests
+        run: ./gradlew testReleaseUnitTest
+
+#      - name: Run Instrumented Android Tests
+#        run: ./gradlew connectedAndroidTest
+
+      - name: Assemble and Sign APK
+        run: ./gradlew assembleRelease
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_FILE: keystore.jks
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          name: Release ${{ github.event.inputs.version }}
+          files: |
+            app/build/outputs/apk/release/app-release.apk
+            app/build/outputs/apk/release/assets/app_icon.webp
+            app/build/outputs/apk/release/assets/manifest-karoo.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

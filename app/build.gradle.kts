@@ -1,6 +1,4 @@
 import com.google.gson.JsonParser
-import java.io.FileInputStream
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -9,15 +7,8 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.androidx.room)
-
     alias(libs.plugins.google.services)
     alias(libs.plugins.google.crashlytics)
-}
-
-val keystoreProperties = Properties()
-val keystorePropertiesFile = rootProject.file("keystore.properties")
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
 android {
@@ -34,10 +25,10 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file(keystoreProperties["storeFile"] as String)
-            storePassword = keystoreProperties["storePassword"] as String
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = file(System.getenv("KEYSTORE_FILE") ?: "no_file")
+            storePassword = System.getenv("KEYSTORE_PASSWORD").orEmpty()
+            keyAlias = System.getenv("KEY_ALIAS").orEmpty()
+            keyPassword = System.getenv("KEY_PASSWORD").orEmpty()
         }
     }
 

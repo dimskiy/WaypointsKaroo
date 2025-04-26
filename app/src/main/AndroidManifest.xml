@@ -38,7 +38,7 @@
 
         <meta-data
             android:name="io.hammerhead.karooext.MANIFEST_URL"
-            android:value="https://github.com/dimskiy/WaypointsKaroo/releases/latest/download/manifest.json" />
+            android:value="https://github.com/dimskiy/WaypointsKaroo/releases/latest/download/manifest-karoo.json" />
 
     </application>
 
