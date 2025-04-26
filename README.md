@@ -19,4 +19,4 @@ You need to sideload the latest Waypoints' APK using the guide from Hammerhead:
   * Use this command to install the APK: ```adb install <PATH_TO_APK>```
 
 ## Release notes
-v1.0 - Initial release
+v0.81 - Initial release
