@@ -12,11 +12,12 @@ The app introduces the missing POI navigation feature and is especially relevant
 
 ## How to install
 You need to sideload the latest Waypoints' APK using the guide from Hammerhead:
-
-* (Sideloading using Companion app)[https://support.hammerhead.io/hc/en-us/articles/31576497036827-Companion-App-Sideloading] (new Karoo "3" only)
-* Sideloading using Android Developer Mode (older Karoo 2 devices):
-  * (Third-party guide on how to get everything set and ready)[https://www.dcrainmaker.com/2021/02/how-to-sideload-android-apps-on-your-hammerhead-karoo-1-karoo-2.html]
-  * Use this command to install the APK: ```adb install <PATH_TO_APK>```
+1. Get the [latest APK file](https://github.com/dimskiy/WaypointsKaroo/releases/latest/download/app-release.apk)
+2. Sideload the Waypoints APK, depending on your Karoo device:
+   * (New Karoo "3") [Sideloading using Companion app](https://support.hammerhead.io/hc/en-us/articles/31576497036827-Companion-App-Sideloading).
+   
+   * (older Karoo 1/2 devices) Sideloading using Android Developer Mode - check the [third-party guide on how to get everything set and ready](https://www.dcrainmaker.com/2021/02/how-to-sideload-android-apps-on-your-hammerhead-karoo-1-karoo-2.html).  
+   Then use this command to install the APK:```adb install <PATH_TO_APK>```
 
 ## Release notes
 v0.81 - Initial release
