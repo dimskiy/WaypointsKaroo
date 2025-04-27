@@ -1,4 +1,7 @@
 # **Waypoints** app for Hammerhead Karoo
+
+![scr_promo](https://github.com/user-attachments/assets/86102699-c721-4e09-a4a6-bebeafb6c89d)
+
 ## Description
 Extension app for Hammerhead Karoo bike navigation: POI online search & offline storage, click-to-navigate.
 The app introduces the missing POI navigation feature and is especially relevant for Karoo 2 devices that lack the new "send location from phone" feature.
