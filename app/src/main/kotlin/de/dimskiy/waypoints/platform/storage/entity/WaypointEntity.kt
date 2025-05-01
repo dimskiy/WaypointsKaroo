@@ -2,9 +2,16 @@ package de.dimskiy.waypoints.platform.storage.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
+import de.dimskiy.waypoints.platform.storage.entity.WaypointEntity.Companion.COLUMN_SERVER_ID
 
-@Entity(tableName = WaypointEntity.TABLE_NAME)
+@Entity(
+    tableName = WaypointEntity.TABLE_NAME,
+    indices = [
+        Index(value = [COLUMN_SERVER_ID], unique = true)
+    ]
+)
 data class WaypointEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_ID) val id: Int = 0,

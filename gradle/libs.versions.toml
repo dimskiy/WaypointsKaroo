@@ -90,6 +90,7 @@ test-androidx-junit-ext = { module = "androidx.test.ext:junit-ktx", version.ref 
 test-androidx-core = { module = "androidx.test:core-ktx", version.ref = "androidxTestCore" }
 test-androidx-runner = { module = "androidx.test:runner", version.ref = "androidxTest" }
 test-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+androidx-room-test = { module = "androidx.room:room-testing", version.ref = "androidxRoom" }
 
 [bundles]
 androidx-lifeycle = ["androidx-lifecycle-runtime-compose", "androidx-lifecycle-viewmodel-compose"]

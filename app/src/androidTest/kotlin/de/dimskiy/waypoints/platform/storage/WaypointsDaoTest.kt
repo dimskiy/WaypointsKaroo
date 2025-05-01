@@ -1,16 +1,13 @@
 package de.dimskiy.waypoints.platform.storage
 
-import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import de.dimskiy.waypoints.platform.storage.entity.WaypointEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
-import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -18,23 +15,10 @@ import org.junit.runner.RunWith
 @OptIn(ExperimentalCoroutinesApi::class)
 class WaypointsDaoTest {
 
-    private lateinit var database: AppDatabase
+    @get:Rule
+    val databaseRule = TestAppDatabaseRule(this)
+
     private lateinit var waypointsDao: WaypointsDao
-
-    @Before
-    fun setup() {
-        database = Room.inMemoryDatabaseBuilder(
-            context = InstrumentationRegistry.getInstrumentation().context,
-            klass = AppDatabase::class.java
-        ).build()
-
-        waypointsDao = database.waypointDao()
-    }
-
-    @After
-    fun tearDown() {
-        database.close()
-    }
 
     @Test
     fun insert_waypoint() = runTest {

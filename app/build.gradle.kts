@@ -70,6 +70,10 @@ android {
         buildConfig = true
     }
 
+    sourceSets {
+        getByName("androidTest").assets.srcDir("$projectDir/schemas")
+    }
+
     packaging {
         resources {
             excludes += "META-INF/gradle/incremental.annotation.processors"
@@ -193,4 +197,5 @@ dependencies {
     testImplementation(libs.bundles.testsCore)
     androidTestImplementation(libs.bundles.testsCore)
     androidTestImplementation(libs.test.androidx.runner)
+    androidTestImplementation(libs.androidx.room.test)
 }
