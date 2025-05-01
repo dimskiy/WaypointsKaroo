@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import de.dimskiy.waypoints.R
 import timber.log.Timber
 import java.text.DecimalFormat
-import java.util.Locale
 
 @Preview(name = "Karoo 2", device = "spec:width=480px,height=800px,dpi=295")
 annotation class PreviewOnKaroo2
@@ -41,17 +40,15 @@ fun GetInputLanguageCode(): String {
 }
 
 @Composable
-fun GetDistanceFormatted(distanceKm: Double, locale: Locale): String {
-    val isImperialUnits = remember { locale == Locale.US || locale == Locale.UK }
-
+fun GetDistanceFormatted(distanceKm: Double, isMiles: Boolean): String {
     return when {
-        isImperialUnits && distanceKm >= 0.621371 -> {
+        isMiles && distanceKm >= 1.60934 -> {
             val miles = distanceKm * 0.621371
             val mileFormat = DecimalFormat("#,##0.#")
             stringResource(R.string.distance_miles_formatted, mileFormat.format(miles))
         }
 
-        isImperialUnits -> {
+        isMiles -> {
             val feet = distanceKm * 3280.84
             val feetFormat = DecimalFormat("#,##0")
             stringResource(R.string.distance_feet_formatted, feetFormat.format(feet))

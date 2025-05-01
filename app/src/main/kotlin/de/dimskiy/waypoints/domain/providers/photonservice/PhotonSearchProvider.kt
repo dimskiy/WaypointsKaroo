@@ -87,6 +87,7 @@ class PhotonSearchProvider @Inject constructor(
                         city = city,
                         zip = postcode,
                         street = street,
+                        house = houseNumber,
                         qualifier1 = qualifier1,
                         qualifier2 = qualifier2,
                     )

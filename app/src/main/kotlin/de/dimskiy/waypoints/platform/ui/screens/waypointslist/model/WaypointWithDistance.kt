@@ -4,5 +4,6 @@ import de.dimskiy.waypoints.domain.model.Waypoint
 
 data class WaypointWithDistance(
     val distanceToDeviceKm: Double?,
-    val waypoint: Waypoint
+    val isDistanceMetric: Boolean?,
+    val waypoint: Waypoint,
 )

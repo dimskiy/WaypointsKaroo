@@ -2,7 +2,9 @@ package de.dimskiy.waypoints.platform.ui.screens.waypointslist
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,7 +40,15 @@ fun WaypointsListPreview() {
                         1,
                         "1",
                         "Name 1 longer than first",
-                        Waypoint.Address("Country", "City", "12345", "Spuelmachinestr 12", "smth", "smwhr"),
+                        Waypoint.Address(
+                            "Country",
+                            "City",
+                            "12345",
+                            "Spuelmachinestr 12",
+                            "smth",
+                            "11",
+                            "smwhr"
+                        ),
                         12.0343302,
                         34.434566,
                     ),
@@ -46,12 +56,24 @@ fun WaypointsListPreview() {
                         2,
                         "2",
                         "Name 2 longer than first",
-                        Waypoint.Address("Country", "City", "12345", "Spuelmachinestr 12", "smth", "smwhr"),
+                        Waypoint.Address(
+                            "Country",
+                            "City",
+                            "12345",
+                            "Spuelmachinestr 12",
+                            "smth",
+                            "11",
+                            "smwhr"
+                        ),
                         12.0343302,
                         34.434566,
                     ),
                 ),
-                searchResponse = SearchResponse(DataResult.ready(emptyList()), "test provider", false)
+                searchResponse = SearchResponse(
+                    DataResult.ready(emptyList()),
+                    "test provider",
+                    false
+                )
             ),
             onUserIntent = {}
         )
@@ -65,7 +87,11 @@ fun WaypointsListEmptyPreview() {
         WaypointsListScreenContent(
             WaypointsListState(
                 bookmarks = emptyList(),
-                searchResponse = SearchResponse(DataResult.ready(emptyList()), "test provider", false)
+                searchResponse = SearchResponse(
+                    DataResult.ready(emptyList()),
+                    "test provider",
+                    false
+                )
             ),
             {}
         )
@@ -123,6 +149,10 @@ fun WaypointsListScreenContent(
                             model = itemsBookmarked[pos],
                             onUserIntent = onUserIntent,
                         )
+                    }
+
+                    item {
+                        Spacer(modifier = Modifier.height(60.dp))
                     }
                 }
             } else {

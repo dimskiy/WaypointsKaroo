@@ -22,6 +22,7 @@ object MigrationFrom1to2 : Migration(1, 2) {
                     `city` TEXT, 
                     `zip` TEXT, 
                     `street` TEXT, 
+                    `house` TEXT, 
                     `qualifier1` TEXT, 
                     `qualifier2` TEXT, 
                     `latitude` REAL NOT NULL, 
@@ -29,7 +30,16 @@ object MigrationFrom1to2 : Migration(1, 2) {
                 )
         """.trimIndent()
         )
-        database.execSQL("INSERT INTO $tempTableName SELECT * FROM $tableName")
+        database.execSQL(
+            """
+                INSERT INTO $tempTableName (
+                    id, serverType, serverId, name, country, city, zip, street, house, qualifier1, qualifier2, latitude, longitude
+                )
+                SELECT
+                    id, serverType, serverId, name, country, city, zip, street, NULL, qualifier1, qualifier2, latitude, longitude
+                FROM $tableName
+            """.trimIndent()
+        )
         database.execSQL("DROP TABLE $tableName")
         database.execSQL("ALTER TABLE $tempTableName RENAME TO $tableName")
         database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_${tableName}_${WaypointEntity.COLUMN_SERVER_ID} ON $tableName (${WaypointEntity.COLUMN_SERVER_ID})")

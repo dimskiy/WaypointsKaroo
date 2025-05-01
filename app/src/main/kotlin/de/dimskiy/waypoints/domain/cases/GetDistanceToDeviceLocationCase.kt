@@ -1,6 +1,7 @@
 package de.dimskiy.waypoints.domain.cases
 
 import de.dimskiy.waypoints.domain.model.Waypoint
+import de.dimskiy.waypoints.domain.providers.EnvironmentPropertiesProvider
 import de.dimskiy.waypoints.domain.providers.SettingsProvider
 import de.dimskiy.waypoints.platform.di.BaseModule
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.WaypointWithDistance
@@ -19,15 +20,18 @@ private const val EARTH_RADIUS_KM = 6371.0
 
 class GetDistanceToDeviceLocationCase @Inject constructor(
     private val settingsProvider: SettingsProvider,
+    private val propertiesProvider: EnvironmentPropertiesProvider,
     @BaseModule.DispatcherDefault private val coroutineDispatcher: CoroutineDispatcher
 ) {
 
     suspend operator fun invoke(waypoints: List<Waypoint>): List<WaypointWithDistance> =
         withContext(coroutineDispatcher) {
+            val isDistanceMetric = propertiesProvider.isMeasureUnitMetric()
             val deviceLastLocation = settingsProvider.observeLastLocation().first()
                 ?: return@withContext waypoints.map {
                     WaypointWithDistance(
                         distanceToDeviceKm = null,
+                        isDistanceMetric = isDistanceMetric,
                         waypoint = it
                     )
                 }
@@ -40,7 +44,12 @@ class GetDistanceToDeviceLocationCase @Inject constructor(
                     lon2 = deviceLastLocation.longitude
                 )
                 Timber.d("Distance ($distance) for $waypoint")
-                WaypointWithDistance(distance, waypoint)
+
+                WaypointWithDistance(
+                    distanceToDeviceKm = distance,
+                    isDistanceMetric = isDistanceMetric,
+                    waypoint = waypoint
+                )
             }
         }
 

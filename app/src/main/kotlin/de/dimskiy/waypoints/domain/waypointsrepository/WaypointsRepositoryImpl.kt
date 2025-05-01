@@ -54,6 +54,7 @@ class WaypointsRepositoryImpl @Inject constructor(
             city = entity.city,
             zip = entity.zip,
             street = entity.street,
+            house = entity.house,
             qualifier1 = entity.qualifier1,
             qualifier2 = entity.qualifier2,
         ),
@@ -70,6 +71,7 @@ class WaypointsRepositoryImpl @Inject constructor(
         qualifier1 = waypoint.address.qualifier1,
         qualifier2 = waypoint.address.qualifier2,
         street = waypoint.address.street,
+        house = waypoint.address.house,
         latitude = waypoint.latitude,
         longitude = waypoint.longitude,
     )

@@ -155,6 +155,7 @@ class WaypointsDaoTest {
         city = "Berlin",
         zip = "123456",
         street = "Alexanderplatz",
+        house = "11",
         qualifier1 = "qualifier1",
         qualifier2 = "qualifier2",
     )

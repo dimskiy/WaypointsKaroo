@@ -194,8 +194,10 @@ dependencies {
     implementation(libs.google.firebase.analytics)
     implementation(libs.google.firebase.crashlytics)
 
+    debugImplementation(libs.test.compose.manifest)
     testImplementation(libs.bundles.testsCore)
     androidTestImplementation(libs.bundles.testsCore)
     androidTestImplementation(libs.test.androidx.runner)
-    androidTestImplementation(libs.androidx.room.test)
+    androidTestImplementation(libs.test.androidx.room)
+    androidTestImplementation(libs.test.compose.ui)
 }

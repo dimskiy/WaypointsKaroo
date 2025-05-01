@@ -22,6 +22,7 @@ data class WaypointEntity(
     @ColumnInfo(name = "city") val city: String?,
     @ColumnInfo(name = "zip") val zip: String?,
     @ColumnInfo(name = "street") val street: String?,
+    @ColumnInfo(name = "house") val house: String?,
     @ColumnInfo(name = "qualifier1") val qualifier1: String?,
     @ColumnInfo(name = "qualifier2") val qualifier2: String?,
     @ColumnInfo(name = "latitude") val latitude: Double,

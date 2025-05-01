@@ -68,6 +68,7 @@ class AppDatabaseMigrationTest {
             assertEquals("Berlin", getString(getColumnIndexOrThrow("city")))
             assertEquals("10115", getString(getColumnIndexOrThrow("zip")))
             assertEquals("Main Street", getString(getColumnIndexOrThrow("street")))
+            assertEquals(null, getString(getColumnIndexOrThrow("house")))
             assertEquals("Qualifier A", getString(getColumnIndexOrThrow("qualifier1")))
             assertEquals("Qualifier B", getString(getColumnIndexOrThrow("qualifier2")))
             assertEquals(52.5200, getDouble(getColumnIndexOrThrow("latitude")), 0.0)

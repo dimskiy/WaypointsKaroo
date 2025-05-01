@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "f67eb8bb05657ee889a340571ca4a0c0",
+    "identityHash": "37ca95aa496f1607c3c10d96cadad48c",
     "entities": [
       {
         "tableName": "waypoints",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `serverType` TEXT NOT NULL, `serverId` TEXT NOT NULL, `name` TEXT NOT NULL, `country` TEXT, `city` TEXT, `zip` TEXT, `street` TEXT, `qualifier1` TEXT, `qualifier2` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `serverType` TEXT NOT NULL, `serverId` TEXT NOT NULL, `name` TEXT NOT NULL, `country` TEXT, `city` TEXT, `zip` TEXT, `street` TEXT, `house` TEXT, `qualifier1` TEXT, `qualifier2` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -53,6 +53,12 @@
           {
             "fieldPath": "street",
             "columnName": "street",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "house",
+            "columnName": "house",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -104,7 +110,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f67eb8bb05657ee889a340571ca4a0c0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '37ca95aa496f1607c3c10d96cadad48c')"
     ]
   }
 }

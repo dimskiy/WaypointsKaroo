@@ -26,6 +26,7 @@ data class PropertiesDto(
     @SerializedName("countrycode") val country: String? = null,
     @SerializedName("name") val name: String? = null,
     @SerializedName("street") val street: String? = null,
+    @SerializedName("housenumber") val houseNumber: String? = null,
     @SerializedName("postcode") val postcode: String? = null,
     @SerializedName("osm_key") val qualifier1: String? = null,
     @SerializedName("osm_value") val qualifier2: String? = null

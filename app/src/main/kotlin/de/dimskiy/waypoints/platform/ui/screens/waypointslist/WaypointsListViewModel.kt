@@ -85,7 +85,11 @@ class WaypointsListViewModel @Inject constructor(
             waypointsWithDistances.sortedBy { it.distanceToDeviceKm }
         } else {
             waypoints.map { waypoint ->
-                WaypointWithDistance(null, waypoint)
+                WaypointWithDistance(
+                    distanceToDeviceKm = null,
+                    isDistanceMetric = null,
+                    waypoint = waypoint
+                )
             }.sortedBy { it.waypoint.name }
         }
     }
