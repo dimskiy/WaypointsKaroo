@@ -21,6 +21,8 @@ android {
         targetSdk = 35
         versionCode = project.properties["APP_VERSION_CODE"].toString().toInt()
         versionName = project.properties["APP_VERSION_NAME"].toString()
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -187,4 +189,8 @@ dependencies {
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.google.firebase.analytics)
     implementation(libs.google.firebase.crashlytics)
+
+    testImplementation(libs.bundles.testsCore)
+    androidTestImplementation(libs.bundles.testsCore)
+    androidTestImplementation(libs.test.androidx.runner)
 }
