@@ -21,6 +21,8 @@ android {
         targetSdk = 35
         versionCode = project.properties["APP_VERSION_CODE"].toString().toInt()
         versionName = project.properties["APP_VERSION_NAME"].toString()
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -66,6 +68,10 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+
+    sourceSets {
+        getByName("androidTest").assets.srcDir("$projectDir/schemas")
     }
 
     packaging {
@@ -187,4 +193,11 @@ dependencies {
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.google.firebase.analytics)
     implementation(libs.google.firebase.crashlytics)
+
+    debugImplementation(libs.test.compose.manifest)
+    testImplementation(libs.bundles.testsCore)
+    androidTestImplementation(libs.bundles.testsCore)
+    androidTestImplementation(libs.test.androidx.runner)
+    androidTestImplementation(libs.test.androidx.room)
+    androidTestImplementation(libs.test.compose.ui)
 }

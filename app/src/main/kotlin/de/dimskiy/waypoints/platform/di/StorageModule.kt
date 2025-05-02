@@ -12,6 +12,7 @@ import de.dimskiy.waypoints.domain.providers.SettingsProvider
 import de.dimskiy.waypoints.platform.settings.SettingsProviderImpl
 import de.dimskiy.waypoints.platform.storage.AppDatabase
 import de.dimskiy.waypoints.platform.storage.WaypointsDao
+import de.dimskiy.waypoints.platform.storage.migrations.MigrationFrom1to2
 import javax.inject.Singleton
 
 @Module
@@ -29,8 +30,10 @@ abstract class StorageModule {
             val db = Room.databaseBuilder(
                 context = context,
                 klass = AppDatabase::class.java,
-                name = "app_database"
-            ).build()
+                name = AppDatabase.DB_NAME
+            )
+                .addMigrations(MigrationFrom1to2)
+                .build()
 
             return db.waypointDao()
         }

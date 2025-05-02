@@ -23,4 +23,7 @@ You need to sideload the latest Waypoints' APK using the guide from Hammerhead:
    Then use this command to install the APK:```adb install <PATH_TO_APK>```
 
 ## Release notes
-v0.81 - Initial release
+v0.84
+Fix imperial/metric units detection.
+Fix address has no house number in search result & bookmarks.
+Minor bugfixes and visual improvements.

@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.ssjetpackcomposeswipeableview.SwipeAbleItemView
@@ -41,7 +42,6 @@ import de.dimskiy.waypoints.platform.ui.PreviewOnKaroo2
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.UserIntent
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.WaypointWithDistance
 import de.dimskiy.waypoints.platform.ui.theme.AppTheme
-import java.util.Locale
 
 //region "Composable previews"
 @Composable
@@ -51,6 +51,7 @@ fun BookmarkedItemFull() {
         DiscoveredListItem(
             model = WaypointWithDistance(
                 distanceToDeviceKm = 12.56,
+                isDistanceMetric = true,
                 waypoint = Waypoint.Stored(
                     id = 1,
                     serverId = "11",
@@ -62,12 +63,72 @@ fun BookmarkedItemFull() {
                         city = "Munich",
                         zip = "12345",
                         street = "RosenheimerStr",
+                        house = "11",
                         qualifier1 = "something",
                         qualifier2 = "nice",
                     )
                 )
             ),
-            locale = Locale.US,
+            onUserIntent = {}
+        )
+    }
+}
+
+@Composable
+@PreviewOnKaroo2
+fun BookmarkedItemFullFeet() {
+    AppTheme(darkTheme = true) {
+        DiscoveredListItem(
+            model = WaypointWithDistance(
+                distanceToDeviceKm = 0.482,
+                isDistanceMetric = false,
+                waypoint = Waypoint.Stored(
+                    id = 1,
+                    serverId = "11",
+                    name = "Awesome place with longer name",
+                    latitude = 10.0,
+                    longitude = 11.5,
+                    address = Waypoint.Address(
+                        country = "DE",
+                        city = "Munich",
+                        zip = "12345",
+                        street = "RosenheimerStr",
+                        house = "11",
+                        qualifier1 = "something",
+                        qualifier2 = "nice",
+                    )
+                )
+            ),
+            onUserIntent = {}
+        )
+    }
+}
+
+@Composable
+@PreviewOnKaroo2
+fun BookmarkedItemFullMiles() {
+    AppTheme(darkTheme = false) {
+        DiscoveredListItem(
+            model = WaypointWithDistance(
+                distanceToDeviceKm = 12.56,
+                isDistanceMetric = false,
+                waypoint = Waypoint.Stored(
+                    id = 1,
+                    serverId = "11",
+                    name = "Awesome place with longer name",
+                    latitude = 10.0,
+                    longitude = 11.5,
+                    address = Waypoint.Address(
+                        country = "DE",
+                        city = "Munich",
+                        zip = "12345",
+                        street = "RosenheimerStr",
+                        house = "11",
+                        qualifier1 = "something",
+                        qualifier2 = "nice",
+                    )
+                )
+            ),
             onUserIntent = {}
         )
     }
@@ -89,6 +150,7 @@ fun BookmarkedItemShortAddress() {
                     city = null,
                     zip = null,
                     street = "RosenheimerStr",
+                    house = "11",
                     qualifier1 = "something",
                     qualifier2 = null,
                 )
@@ -105,6 +167,7 @@ fun SearchResultItemFull() {
         DiscoveredListItem(
             model = WaypointWithDistance(
                 distanceToDeviceKm = null,
+                isDistanceMetric = false,
                 waypoint = Waypoint.Discovered(
                     serverId = "11",
                     name = "Awesome place",
@@ -115,12 +178,12 @@ fun SearchResultItemFull() {
                         city = "Munich",
                         zip = "12345",
                         street = "RosenheimerStr",
+                        house = "11",
                         qualifier1 = "something",
                         qualifier2 = "nice",
                     )
                 )
             ),
-            locale = Locale.US,
             onUserIntent = {}
         )
     }
@@ -142,6 +205,7 @@ fun SearchResultItemShortAddressBookmarked() {
                     city = null,
                     zip = null,
                     street = "RosenheimerStr",
+                    house = "11",
                     qualifier1 = "something",
                     qualifier2 = null,
                 )
@@ -170,7 +234,7 @@ fun WaypointBookmarkItem(
         leftViewBackgroundColor = MaterialTheme.colorScheme.errorContainer,
         rightViewBackgroundColor = MaterialTheme.colorScheme.errorContainer,
         swipeDirection = SwipeDirection.LEFT,
-        height = 80.dp,
+        height = 95.dp,
         onClick = { onUserIntent(UserIntent.DismissWaypoint(model)) },
     ) {
         val qualifiersInfo = remember { model.address.getQualifiersFormatted() }
@@ -235,7 +299,6 @@ fun WaypointBookmarkItem(
 fun DiscoveredListItem(
     model: WaypointWithDistance,
     onUserIntent: (UserIntent) -> Unit,
-    locale: Locale = remember { Locale.getDefault() },
     modifier: Modifier = Modifier
 ) {
     val qualifiersInfo = remember { model.waypoint.address.getQualifiersFormatted() }
@@ -285,7 +348,7 @@ fun DiscoveredListItem(
             }
         },
         trailingContent = {
-            if (model.distanceToDeviceKm != null) {
+            if (model.distanceToDeviceKm != null && model.isDistanceMetric != null) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Image(
                         imageVector = Icons.Default.Place,
@@ -297,8 +360,9 @@ fun DiscoveredListItem(
                     Text(
                         text = GetDistanceFormatted(
                             distanceKm = model.distanceToDeviceKm,
-                            locale = locale
+                            isMiles = !model.isDistanceMetric
                         ),
+                        textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.tertiary,
                         modifier = Modifier.padding(top = 5.dp)

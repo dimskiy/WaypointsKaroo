@@ -31,6 +31,7 @@ sealed class Waypoint {
         val city: String?,
         val zip: String?,
         val street: String?,
+        val house: String?,
         val qualifier1: String?,
         val qualifier2: String?
     ) {
@@ -42,7 +43,10 @@ sealed class Waypoint {
                 .takeIf(List<*>::isNotEmpty)
                 ?.joinToString(prefix = "[", postfix = "]", separator = ": ")
 
-            return listOfNotNull(countryAndCity, street)
+            val streetAndNumber = listOfNotNull(street, house)
+                .joinToString("\u00A0")
+
+            return listOfNotNull(countryAndCity, streetAndNumber)
                 .joinToString(separator = " ")
         }
     }

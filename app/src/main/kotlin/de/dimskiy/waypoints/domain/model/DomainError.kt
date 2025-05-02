@@ -11,4 +11,9 @@ sealed class DomainError : Throwable() {
         val wrappedException: Throwable? = null,
         override val message: String? = wrappedException?.message
     ) : DomainError()
+
+    data class EnvironmentPropertiesError(
+        val wrappedException: Throwable? = null,
+        override val message: String? = wrappedException?.message
+    ) : DomainError()
 }
