@@ -69,7 +69,10 @@ fun SearchWidget(
         onQueryChange = { query = it },
         onSearch = { searchAction() },
         active = isSearchActive,
-        onActiveChange = { isSearchActive = it },
+        onActiveChange = { isActive ->
+            if (!isActive) query = ""
+            isSearchActive = isActive
+        },
         placeholder = {
             Text(
                 text = stringResource(R.string.widget_search_placeholder),
