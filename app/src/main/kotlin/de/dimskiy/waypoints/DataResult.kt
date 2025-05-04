@@ -27,6 +27,8 @@ sealed class DataResult<out T>() {
         }
     }
 
+    fun getErrorIfAny(): DomainError? = if (this is Error) error else null
+
     data class Loading(val message: String? = null) : DataResult<Nothing>()
 
     data class Error<T>(val error: DomainError) : DataResult<T>()
