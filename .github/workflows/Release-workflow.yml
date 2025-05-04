@@ -7,9 +7,13 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Enter release tag (version name)'
+        description: 'Enter app version name'
         required: true
-        default: 'v1.0'
+        default: '1.0'
+      release_notes:
+        description: 'Enter release notes'
+        required: true
+        default: 'Some feature added.\nAnother bug fixed'
 
 jobs:
   build-release:
@@ -27,6 +31,35 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+
+      - name: Update 'manifest-karoo-template.json' with release notes
+        run: |
+          jq '.releaseNotes = env.RELEASE_NOTES' manifest-karoo-template.json > manifest-karoo-temp.json
+          mv manifest-karoo-temp.json manifest-karoo-template.json
+
+          git add manifest-karoo-template.json
+        env:
+          RELEASE_NOTES: ${{ github.event.inputs.release_notes }}
+
+      - name: Update App version code/name
+        run: |
+          VERSION_CODE=$(grep "^APP_VERSION_CODE=" gradle.properties | cut -d'=' -f2 | tr -d '\n')
+          CURRENT_VERSION_NAME=$(grep "^APP_VERSION_NAME=" gradle.properties | cut -d'=' -f2 | tr -d '\n')
+          
+          NEW_VERSION_CODE=$((VERSION_CODE + 1))
+          NEW_VERSION_NAME="${{ github.event.inputs.version }}"
+          RELEASE_NOTES="${{ github.event.inputs.release_notes }}"
+          
+          # Update gradle.properties
+          sed -i "s/APP_VERSION_CODE=$VERSION_CODE/APP_VERSION_CODE=$NEW_VERSION_CODE/" gradle.properties
+          sed -i "s/APP_VERSION_NAME=$CURRENT_VERSION_NAME/APP_VERSION_NAME=$NEW_VERSION_NAME/" gradle.properties
+          
+          git config user.name "GitHub Actions"
+          git add gradle.properties
+          git commit -m "Release $NEW_VERSION_NAME:\n$RELEASE_NOTES"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Decode Keystore file
         run: |
@@ -56,8 +89,8 @@ jobs:
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.inputs.version }}
-          name: Release ${{ github.event.inputs.version }}
+          tag_name: v${{ github.event.inputs.version }}
+          name: Release v${{ github.event.inputs.version }}
           files: |
             app/build/outputs/apk/release/app-release.apk
             app/build/outputs/apk/release/assets/app_icon.webp
