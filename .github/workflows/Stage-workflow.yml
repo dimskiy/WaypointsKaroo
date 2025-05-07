@@ -1,13 +1,13 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Stage-pipe
+name: Create pre-release (stage)
 
 # Controls when the workflow will run
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Enter app <stage> version name'
+        description: 'Enter app version name ("-stage" will be added automatically)'
         required: true
         default: '1.0'
       release_notes:
@@ -74,22 +74,20 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew testStageUnitTest
 
-      - name: Assemble and Sign APK
+      - name: Assemble stage APK
         run: ./gradlew assembleStage
 
       - name: Create pre-release (stage build)
         uses: softprops/action-gh-release@v2
         with:
-          tag: v${{ env.VERSION_LABEL }}
+          tag_name: v${{ env.VERSION_LABEL }}
           name: Pre-release v${{ env.VERSION_LABEL }}
           prerelease: true
           body: |
-            This is a pre-release ${{ env.VERSION_LABEL }} staged build.
+            This is a pre-release ${{ env.VERSION_LABEL }} build.
             Artifacts are for testing purposes only!
             Commit: ${{ github.event.inputs.commit_sha }}
           files: |
             app/build/outputs/apk/stage/app-stage.apk
-            app/build/outputs/apk/stage/assets/app_icon.webp
-            app/build/outputs/apk/stage/assets/manifest-karoo.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
