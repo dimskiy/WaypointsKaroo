@@ -74,13 +74,13 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew testStageUnitTest
 
-      - name: Assemble and Sign APK
+      - name: Assemble and stage APK
         run: ./gradlew assembleStage
 
       - name: Create pre-release (stage build)
         uses: softprops/action-gh-release@v2
         with:
-          tag: v${{ env.VERSION_LABEL }}
+          tag_name: v${{ env.VERSION_LABEL }}
           name: Pre-release v${{ env.VERSION_LABEL }}
           prerelease: true
           body: |
