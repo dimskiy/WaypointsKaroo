@@ -1,13 +1,13 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Release-pipe
+name: Stage-pipe
 
 # Controls when the workflow will run
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Enter app version name'
+        description: 'Enter app <stage> version name'
         required: true
         default: '1.0'
       release_notes:
@@ -15,8 +15,11 @@ on:
         required: true
         default: 'Some feature added.\nAnother bug fixed'
 
+env:
+  VERSION_LABEL: ${{ github.event.inputs.version }}-stage
+
 jobs:
-  build-release:
+  build-prerelease:
     runs-on: ubuntu-latest
 
     permissions:
@@ -37,7 +40,7 @@ jobs:
           jq '.releaseNotes = env.RELEASE_NOTES' manifest-karoo-template.json > manifest-karoo-temp.json
           mv manifest-karoo-temp.json manifest-karoo-template.json
 
-          git add manifest-karoo-template.json
+#          git add manifest-karoo-template.json
         env:
           RELEASE_NOTES: ${{ github.event.inputs.release_notes }}
 
@@ -47,23 +50,19 @@ jobs:
           CURRENT_VERSION_NAME=$(grep "^APP_VERSION_NAME=" gradle.properties | cut -d'=' -f2 | tr -d '\n')
           
           NEW_VERSION_CODE=$((VERSION_CODE + 1))
-          NEW_VERSION_NAME="${{ github.event.inputs.version }}"
+          NEW_VERSION_NAME="${{ env.VERSION_LABEL }}"
           RELEASE_NOTES="${{ github.event.inputs.release_notes }}"
           
           # Update gradle.properties
           sed -i "s/APP_VERSION_CODE=$VERSION_CODE/APP_VERSION_CODE=$NEW_VERSION_CODE/" gradle.properties
           sed -i "s/APP_VERSION_NAME=$CURRENT_VERSION_NAME/APP_VERSION_NAME=$NEW_VERSION_NAME/" gradle.properties
           
-          git config user.name "GitHub Actions"
-          git add gradle.properties
-          git commit -m "Release $NEW_VERSION_NAME:\n$RELEASE_NOTES"
-          git push
+#          git config user.name "GitHub Actions"
+#          git add gradle.properties
+#          git commit -m "Release $NEW_VERSION_NAME:\n$RELEASE_NOTES"
+#          git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Decode Keystore file
-        run: |
-          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > app/keystore.jks
 
       - name: Decode google-services.json
         run: |
@@ -73,27 +72,24 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Run Unit Tests
-        run: ./gradlew testReleaseUnitTest
-
-#      - name: Run Instrumented Android Tests
-#        run: ./gradlew connectedAndroidTest
+        run: ./gradlew testStageUnitTest
 
       - name: Assemble and Sign APK
-        run: ./gradlew assembleRelease
-        env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          KEYSTORE_FILE: keystore.jks
+        run: ./gradlew assembleStage
 
-      - name: Upload release assets
+      - name: Create pre-release (stage build)
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ github.event.inputs.version }}
-          name: Release v${{ github.event.inputs.version }}
+          tag: v${{ env.VERSION_LABEL }}
+          name: Pre-release v${{ env.VERSION_LABEL }}
+          prerelease: true
+          body: |
+            This is a pre-release ${{ env.VERSION_LABEL }} staged build.
+            Artifacts are for testing purposes only!
+            Commit: ${{ github.event.inputs.commit_sha }}
           files: |
-            app/build/outputs/apk/release/app-release.apk
-            app/build/outputs/apk/release/assets/app_icon.webp
-            app/build/outputs/apk/release/assets/manifest-karoo.json
+            app/build/outputs/apk/stage/app-stage.apk
+            app/build/outputs/apk/stage/assets/app_icon.webp
+            app/build/outputs/apk/stage/assets/manifest-karoo.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
