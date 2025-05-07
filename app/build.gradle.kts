@@ -50,6 +50,11 @@ android {
             isJniDebuggable = true
             isPseudoLocalesEnabled = true
         }
+
+        create("stage") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+        }
     }
 
     room {
