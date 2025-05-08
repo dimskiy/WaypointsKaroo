@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_search_placeholder">Waar ben je naar op zoek?</string>
+    <string name="search_button_description">Zoeken openen</string>
+    <string name="back_button_description">Ga terug</string>
+    <string name="error_msg_generic">Er is iets misgegaan :(</string>
+    <string name="error_msg_network_timeout">Internetverzoek time-out. Gratis API\'s kunnen traag zijn, probeer het zo meteen opnieuw</string>
+    <string name="error_msg_no_location">Kan je GPS-locatie niet vinden.\nProbeer rond te lopen</string>
+    <string name="message_nothing_found">Nog geen resultaten</string>
+    <string name="img_description_bookmarked_sign">Opgeslagen markering</string>
+    <string name="message_no_bookmarks">Geen waypoints opgeslagen.\nBegin met zoeken</string>
+    <string name="label_search_by_location">Vanaf huidige locatie</string>
+    <string name="label_search_by_location_explain">Deelt apparaatlocatie met %1s</string>
+    <string name="message_finding_the_location">Locatie van apparaat wordt bepaald</string>
+    <string name="description_navigate_back">Navigeren naar vorige</string>
+    <string name="distance_miles_formatted">%1s\nmijl</string>
+    <string name="distance_km_formatted">%1s\nkm</string>
+    <string name="distance_feet_formatted">%1s\nvoet</string>
+    <string name="distance_meters_formatted">%1s\nm</string>
+</resources>

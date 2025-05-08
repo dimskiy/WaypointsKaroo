@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_search_placeholder">Que cherchez-vous\\u00A0?</string>
+    <string name="search_button_description">Ouvrir la recherche</string>
+    <string name="back_button_description">Revenir en arrière</string>
+    <string name="error_msg_generic">Une erreur s\'est produite :(</string>
+    <string name="error_msg_network_timeout">Requête Internet expirée. Les API gratuites peuvent être lentes, veuillez réessayer bientôt</string>
+    <string name="error_msg_no_location">Impossible de trouver votre position GPS.\nEssayez de bouger un peu</string>
+    <string name="message_nothing_found">Aucun résultat pour l’instant</string>
+    <string name="img_description_bookmarked_sign">Signet enregistré</string>
+    <string name="message_no_bookmarks">Aucun point enregistré.\nCommencez par effectuer une recherche</string>
+    <string name="label_search_by_location">Depuis la position actuelle</string>
+    <string name="label_search_by_location_explain">Partage la position de l\'appareil avec %1s</string>
+    <string name="message_finding_the_location">Recherche de la position de l\'appareil</string>
+    <string name="description_navigate_back">Revenir en arrière</string>
+    <string name="distance_miles_formatted">%1s\nmiles</string>
+    <string name="distance_km_formatted">%1s\nkm</string>
+    <string name="distance_feet_formatted">%1s\npieds</string>
+    <string name="distance_meters_formatted">%1s\nm</string>
+</resources>

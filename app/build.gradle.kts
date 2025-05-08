@@ -200,9 +200,7 @@ dependencies {
     implementation(libs.google.firebase.crashlytics)
 
     debugImplementation(libs.test.compose.manifest)
-    testImplementation(libs.bundles.testsCore)
-    androidTestImplementation(libs.bundles.testsCore)
-    androidTestImplementation(libs.test.androidx.runner)
-    androidTestImplementation(libs.test.androidx.room)
-    androidTestImplementation(libs.test.compose.ui)
+    testImplementation(libs.bundles.test.core)
+    androidTestImplementation(libs.bundles.test.core)
+    androidTestImplementation(libs.bundles.test.instrumented.extras)
 }

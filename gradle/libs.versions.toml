@@ -32,6 +32,7 @@ androidxTestExt = "1.2.1"
 androidxTest = "1.6.2"
 coroutinesTest = "1.8.0"
 composeTest = "1.8.0"
+mockk = "1.13.7"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -94,6 +95,8 @@ test-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", ve
 test-androidx-room = { module = "androidx.room:room-testing", version.ref = "androidxRoom" }
 test-compose-ui = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeTest" }
 test-compose-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+test-mockk = { module = "io.mockk:mockk", version.ref = "mockk"}
+test-mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk"}
 
 [bundles]
 androidx-lifeycle = ["androidx-lifecycle-runtime-compose", "androidx-lifecycle-viewmodel-compose"]
@@ -112,10 +115,17 @@ google-firebase = [
     "google-firebase-analytics",
     "google-firebase-crashlytics"
 ]
-testsCore = [
+test-core = [
     "test-junit",
     "test-androidx-junit",
     "test-androidx-junit-ext",
     "test-androidx-core",
-    "test-coroutines"
+    "test-coroutines",
+    "test-mockk"
+]
+test-instrumented-extras = [
+    "test-androidx-runner",
+    "test-androidx-room",
+    "test-compose-ui",
+    "test-mockk-android"
 ]

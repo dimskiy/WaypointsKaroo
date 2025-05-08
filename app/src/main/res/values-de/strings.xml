@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_search_placeholder">Wonach suchst du?</string>
+    <string name="search_button_description">Suche öffnen</string>
+    <string name="back_button_description">Zurück</string>
+    <string name="error_msg_generic">Etwas ist schiefgelaufen :(</string>
+    <string name="error_msg_network_timeout">Internet-Zeitüberschreitung. Kostenlose APIs können gelegentlich ausfallen, bitte versuche es bald erneut</string>
+    <string name="error_msg_no_location">GPS-Standort konnte nicht gefunden werden.\nBewege dich etwas</string>
+    <string name="message_nothing_found">Noch keine Ergebnisse gefunden</string>
+    <string name="img_description_bookmarked_sign">Gespeichertes Zeichen</string>
+    <string name="message_no_bookmarks">Keine Wegpunkte gespeichert.\nBitte starte eine Suche</string>
+    <string name="label_search_by_location">Vom aktuellen Standort</string>
+    <string name="label_search_by_location_explain">Teilt den Gerätestandort mit %1s</string>
+    <string name="message_finding_the_location">Standort des Geräts wird ermittelt</string>
+    <string name="description_navigate_back">Zurück navigieren</string>
+    <string name="distance_miles_formatted">%1s\nMeilen</string>
+    <string name="distance_km_formatted">%1s\nkm</string>
+    <string name="distance_feet_formatted">%1s\nFuß</string>
+    <string name="distance_meters_formatted">%1s\nm</string>
+</resources>

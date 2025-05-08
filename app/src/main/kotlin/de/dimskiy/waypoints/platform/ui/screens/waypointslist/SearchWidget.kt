@@ -205,6 +205,6 @@ private fun SearchResultList(
             }
         }
     } else {
-        InfoContentWidget(message = stringResource(R.string.message_nothing_gound))
+        InfoContentWidget(message = stringResource(R.string.message_nothing_found))
     }
 }

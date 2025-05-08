@@ -3,8 +3,10 @@ package de.dimskiy.waypoints.domain.cases
 import de.dimskiy.waypoints.DataResult
 import de.dimskiy.waypoints.domain.model.DeviceLocation
 import de.dimskiy.waypoints.domain.model.DomainError
+import de.dimskiy.waypoints.domain.model.ReportingModel
 import de.dimskiy.waypoints.domain.model.Waypoint
 import de.dimskiy.waypoints.domain.providers.LocationsProvider
+import de.dimskiy.waypoints.domain.providers.ReportingProvider
 import de.dimskiy.waypoints.domain.providers.SettingsProvider
 import de.dimskiy.waypoints.domain.providers.WaypointsSearchProvider
 import de.dimskiy.waypoints.domain.waypointsrepository.WaypointsRepository
@@ -28,6 +30,7 @@ class ObserveSearchResultsCase @Inject constructor(
     private val repository: WaypointsRepository,
     private val locationProvider: LocationsProvider,
     private val settingsProvider: SettingsProvider,
+    private val reportingProvider: ReportingProvider,
     @BaseModule.TimeProvider private val currentTimeProvider: Provider<Long>
 ) {
     val providerName: String = searchProvider.getProviderName()
@@ -38,6 +41,8 @@ class ObserveSearchResultsCase @Inject constructor(
         resultsLanguageCode: String
     ): Flow<DataResult<List<Waypoint>>> =
         settingsProvider.observeGeoSearchEnabled().flatMapLatest { isGeoSearchEnabled ->
+            reportingProvider.report(ReportingModel.PerformSearch(isGeoSearchEnabled))
+
             if (isGeoSearchEnabled) {
                 searchWithLocationFlow(query, resultsLanguageCode)
             } else {
@@ -58,10 +63,12 @@ class ObserveSearchResultsCase @Inject constructor(
                 locationProvider.observeDeviceLocations().onEach {
                     it.data?.let { settingsProvider.saveLocation(it) }
                 }
+
             } else {
                 Timber.d("Use cached location: $lastLocation")
                 flowOf(DataResult.ready(lastLocation))
             }
+
         }.flatMapLatest { locationResult ->
             when (locationResult) {
                 is DataResult.Error -> flowOf(DataResult.error(locationResult.error))
@@ -84,7 +91,7 @@ class ObserveSearchResultsCase @Inject constructor(
 
     private fun isLastLocationObsolete(lastLocation: DeviceLocation?): Boolean {
         val timeDelta = currentTimeProvider.get() - (lastLocation?.timestamp ?: 0)
-        return timeDelta > LAST_LOCATION_OBSOLETE_TIMEOUT.inWholeMilliseconds
+        return timeDelta >= LAST_LOCATION_OBSOLETE_TIMEOUT.inWholeMilliseconds
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -93,6 +100,12 @@ class ObserveSearchResultsCase @Inject constructor(
             send(DataResult.loading())
 
             val waypointsDiscoveredResult = getSearchResult()
+            reportingProvider.report(
+                ReportingModel.SearchApiResult(
+                    isSuccess = waypointsDiscoveredResult.isReady(),
+                    errorMessage = waypointsDiscoveredResult.getErrorIfAny()?.message
+                )
+            )
 
             repository.observeWaypointsStored().mapLatest { itemsStored ->
                 val itemsStoredMap = itemsStored.associateBy(Waypoint::serverId)
@@ -105,6 +118,6 @@ class ObserveSearchResultsCase @Inject constructor(
         }
 
     companion object {
-        private val LAST_LOCATION_OBSOLETE_TIMEOUT = 10.minutes
+        val LAST_LOCATION_OBSOLETE_TIMEOUT = 10.minutes
     }
 }

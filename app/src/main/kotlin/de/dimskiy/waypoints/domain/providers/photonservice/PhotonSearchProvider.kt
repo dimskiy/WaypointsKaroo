@@ -13,7 +13,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
-import timber.log.Timber
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -66,13 +65,11 @@ class PhotonSearchProvider @Inject constructor(
                 DataResult.ready(response)
             }
         } catch (e: TimeoutCancellationException) {
-            Timber.d(e, "Request timeout")
             DataResult.error(
                 DomainError.NetworkError(message = context.getString(R.string.error_msg_network_timeout))
             )
 
         } catch (e: Exception) {
-            Timber.w(e, "Exception during api call")
             DataResult.error(DomainError.NetworkError(e))
         }
 
