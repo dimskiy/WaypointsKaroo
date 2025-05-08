@@ -91,7 +91,7 @@ class ObserveSearchResultsCase @Inject constructor(
 
     private fun isLastLocationObsolete(lastLocation: DeviceLocation?): Boolean {
         val timeDelta = currentTimeProvider.get() - (lastLocation?.timestamp ?: 0)
-        return timeDelta > LAST_LOCATION_OBSOLETE_TIMEOUT.inWholeMilliseconds
+        return timeDelta >= LAST_LOCATION_OBSOLETE_TIMEOUT.inWholeMilliseconds
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -118,6 +118,6 @@ class ObserveSearchResultsCase @Inject constructor(
         }
 
     companion object {
-        private val LAST_LOCATION_OBSOLETE_TIMEOUT = 10.minutes
+        val LAST_LOCATION_OBSOLETE_TIMEOUT = 10.minutes
     }
 }
