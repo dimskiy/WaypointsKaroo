@@ -4,7 +4,7 @@
     <string name="search_button_description">Suche öffnen</string>
     <string name="back_button_description">Zurück</string>
     <string name="error_msg_generic">Etwas ist schiefgelaufen :(</string>
-    <string name="error_msg_network_timeout">Internet-Anfrage zeitüberschritten</string>
+    <string name="error_msg_network_timeout">Internet-Zeitüberschreitung. Kostenlose APIs können gelegentlich ausfallen, bitte versuche es bald erneut</string>
     <string name="error_msg_no_location">GPS-Standort konnte nicht gefunden werden.\nBewege dich etwas</string>
     <string name="message_nothing_found">Noch keine Ergebnisse gefunden</string>
     <string name="img_description_bookmarked_sign">Gespeichertes Zeichen</string>

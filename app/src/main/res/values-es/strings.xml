@@ -4,7 +4,7 @@
     <string name="search_button_description">Abrir búsqueda</string>
     <string name="back_button_description">Volver</string>
     <string name="error_msg_generic">Algo salió mal :(</string>
-    <string name="error_msg_network_timeout">Tiempo de espera de la solicitud de internet agotado</string>
+    <string name="error_msg_network_timeout">Tiempo de espera agotado. Las APIs gratuitas pueden fallar, inténtalo de nuevo en breve</string>
     <string name="error_msg_no_location">No se puede encontrar tu ubicación GPS.\nIntenta moverte</string>
     <string name="message_nothing_found">Aún no hay resultados</string>
     <string name="img_description_bookmarked_sign">Marcador guardado</string>
