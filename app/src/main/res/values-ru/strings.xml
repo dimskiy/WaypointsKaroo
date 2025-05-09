@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="widget_search_placeholder">Что ищете?</string>
+    <string name="widget_search_placeholder">Название, тип или адрес</string>
     <string name="search_button_description">Открыть поиск</string>
     <string name="back_button_description">Назад</string>
     <string name="error_msg_generic">Что-то пошло не так :(</string>

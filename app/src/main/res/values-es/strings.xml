@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="widget_search_placeholder">¿Qué estás buscando?</string>
+    <string name="widget_search_placeholder">Nombre del lugar, tipo o dirección</string>
     <string name="search_button_description">Abrir búsqueda</string>
     <string name="back_button_description">Volver</string>
     <string name="error_msg_generic">Algo salió mal :(</string>

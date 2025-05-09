@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="widget_search_placeholder">Waar ben je naar op zoek?</string>
+    <string name="widget_search_placeholder">Plaatsnaam, type of adres</string>
     <string name="search_button_description">Zoeken openen</string>
     <string name="back_button_description">Ga terug</string>
     <string name="error_msg_generic">Er is iets misgegaan :(</string>

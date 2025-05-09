@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="widget_search_placeholder">Que cherchez-vous\\u00A0?</string>
+    <string name="widget_search_placeholder">Nom du lieu, type ou adresse</string>
     <string name="search_button_description">Ouvrir la recherche</string>
     <string name="back_button_description">Revenir en arrière</string>
     <string name="error_msg_generic">Une erreur s\'est produite :(</string>

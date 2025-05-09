@@ -3,7 +3,7 @@
     <string name="photon_api_base_url" translatable="false">"https://photon.komoot.io/"</string>
     <string name="app_name" translatable="false">Waypoints</string>
 
-    <string name="widget_search_placeholder">What are you looking for?</string>
+    <string name="widget_search_placeholder">Place name, type or address</string>
     <string name="search_button_description">Open search</string>
     <string name="back_button_description">Go back</string>
     <string name="error_msg_generic">Something went wrong :(</string>
