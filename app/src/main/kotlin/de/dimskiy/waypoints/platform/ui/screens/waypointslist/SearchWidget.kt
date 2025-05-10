@@ -32,7 +32,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import de.dimskiy.waypoints.DataResult
 import de.dimskiy.waypoints.R
 import de.dimskiy.waypoints.platform.ui.GetInputLanguageCode
@@ -76,6 +78,9 @@ fun SearchWidget(
         placeholder = {
             Text(
                 text = stringResource(R.string.widget_search_placeholder),
+                maxLines = 1,
+                fontSize = 15.sp,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.alpha(0.7f),
             )
         },

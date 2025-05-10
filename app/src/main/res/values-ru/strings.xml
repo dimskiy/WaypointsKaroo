@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="widget_search_placeholder">Название, тип или адрес</string>
+    <string name="widget_search_placeholder">Название/адрес</string>
     <string name="search_button_description">Открыть поиск</string>
     <string name="back_button_description">Назад</string>
     <string name="error_msg_generic">Что-то пошло не так :(</string>
-    <string name="error_msg_network_timeout">Время ожидания запроса истекло. Бесплатные API могут быть нестабильны, попробуйте чуть позже</string>
+    <string name="error_msg_network_timeout">Время ожидания запроса истекло.\nБесплатные API могут быть нестабильны, попробуйте чуть позже</string>
     <string name="error_msg_no_location">Не удаётся определить геопозицию.\nПопробуйте в другом месте</string>
     <string name="message_nothing_found">Пока нет результатов</string>
     <string name="img_description_bookmarked_sign">Сохранённая точка</string>

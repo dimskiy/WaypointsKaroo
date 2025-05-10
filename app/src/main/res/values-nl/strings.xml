@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="widget_search_placeholder">Plaatsnaam, type of adres</string>
+    <string name="widget_search_placeholder">Naam of adres</string>
     <string name="search_button_description">Zoeken openen</string>
     <string name="back_button_description">Ga terug</string>
     <string name="error_msg_generic">Er is iets misgegaan :(</string>
-    <string name="error_msg_network_timeout">Internetverzoek time-out. Gratis API\'s kunnen traag zijn, probeer het zo meteen opnieuw</string>
+    <string name="error_msg_network_timeout">Internetverzoek time-out.\nGratis API\'s kunnen traag zijn, probeer het zo meteen opnieuw</string>
     <string name="error_msg_no_location">Kan je GPS-locatie niet vinden.\nProbeer rond te lopen</string>
     <string name="message_nothing_found">Nog geen resultaten</string>
     <string name="img_description_bookmarked_sign">Opgeslagen markering</string>
