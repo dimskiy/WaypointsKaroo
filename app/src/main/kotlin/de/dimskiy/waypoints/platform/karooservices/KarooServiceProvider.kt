@@ -1,11 +1,16 @@
 package de.dimskiy.waypoints.platform.karooservices
 
 import io.hammerhead.karooext.KarooSystemService
+import io.hammerhead.karooext.models.KarooEvent
+import io.hammerhead.karooext.models.KarooEventParams
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
+import kotlin.coroutines.resumeWithException
 
 class KarooServiceProvider(
     private val karooService: KarooSystemService
@@ -13,6 +18,35 @@ class KarooServiceProvider(
     @Volatile
     private var activeConsumers = 0
     private val mutex = Mutex()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    inline fun <reified T : KarooEvent> observeEvent(eventParams: KarooEventParams): Flow<T> =
+        channelFlow {
+            ensureConnected { karooService ->
+                val result = suspendCancellableCoroutine<T> { continuation ->
+                    var consumerId: String? = null
+                    consumerId = karooService.addConsumer<T>(
+                        params = eventParams,
+                        onError = {
+                            Timber.d("Request error: $it")
+                            consumerId?.let(karooService::removeConsumer)
+                            continuation.resumeWithException(IllegalStateException(it))
+                        },
+                        onEvent = { response ->
+                            continuation.resume(response) {
+                                Timber.d("Coroutine cancelled for receiving event ($eventParams)")
+                            }
+                        },
+                        onComplete = {
+                            Timber.d("Http consumer onComplete")
+                            consumerId?.let(karooService::removeConsumer)
+                        }
+                    )
+                }
+
+                send(result)
+            }
+        }
 
     suspend fun ensureConnected(block: suspend (KarooSystemService) -> Unit) {
         Timber.d("Service call requested")
@@ -41,9 +75,15 @@ class KarooServiceProvider(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun awaitServiceConnection() = suspendCancellableCoroutine { continuation ->
-        karooService.connect {
-            continuation.resume(Unit) {
-                Timber.d(it, "Service preparation cancelled")
+        karooService.connect { isConnected ->
+            if (isConnected) {
+                continuation.resume(Unit) {
+                    Timber.d(it, "Service preparation cancelled")
+                }
+            } else {
+                val errorMsg = "Cannot connect to Karoo service"
+                Timber.e(errorMsg)
+                continuation.resumeWithException(IllegalStateException(errorMsg))
             }
         }
     }

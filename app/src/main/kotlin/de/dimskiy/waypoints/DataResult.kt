@@ -31,7 +31,7 @@ sealed class DataResult<out T>() {
 
     data class Loading(val message: String? = null) : DataResult<Nothing>()
 
-    data class Error<T>(val error: DomainError) : DataResult<T>()
+    data class Error<T>(val error: DomainError?) : DataResult<T>()
 
     data class Ready<T>(override val data: T) : DataResult<T>()
 
@@ -41,6 +41,6 @@ sealed class DataResult<out T>() {
 
         fun <T> ready(data: T) = Ready(data)
 
-        fun <T> error(error: DomainError) = Error<T>(error)
+        fun <T> error(error: DomainError?) = Error<T>(error)
     }
 }
