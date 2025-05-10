@@ -55,68 +55,12 @@ class KarooLocationsProvider @Inject constructor(
             .catch {
                 if (it is TimeoutCancellationException) {
                     Timber.d("Device location discovery TIMEOUT")
-                    getCachedResultOrError()
+                    emit(getCachedResultOrError())
                 } else {
                     emit(DataResult.error(DomainError.LocationServiceError(it)))
                 }
             }
             .onStart { emit(DataResult.loading(context.getString(R.string.message_finding_the_location))) }
-
-//                send(result)
-//                karooServiceProvider.ensureConnected { service ->
-//                    send(getLocation(service))
-//                }
-//        awaitCancellation()
-//    }.onStart {
-//        emit(DataResult.loading(context.getString(R.string.message_finding_the_location)))
-//    }
-
-//    private suspend fun getLocation(service: KarooSystemService): DataResult<DeviceLocation> = try {
-//        Timber.d("Starting device location discovery")
-//
-//        val locationResult = getCurrentLocationResult(service).mapResult {
-//            DeviceLocation(
-//                latitude = it.lat,
-//                longitude = it.lng,
-//                timestamp = currentTimeProvider.get()
-//            )
-//        }
-//        lastLocationCache.emit(locationResult)
-//        Timber.d("Location cache update: $locationResult")
-//        locationResult
-//
-//    } catch (e: TimeoutCancellationException) {
-//        Timber.d("Device location discovery TIMEOUT")
-//        getCachedResultOrError()
-//    }
-
-//    private suspend fun getCurrentLocationResult(service: KarooSystemService): DataResult<OnLocationChanged> {
-//        var consumerId: String? = null
-//
-//        val locationResult = suspendCancellableCoroutine { continuation ->
-//            consumerId = service.addConsumer<OnLocationChanged>(
-//                params = OnLocationChanged.Params,
-//                onError = {
-//                    continuation.resume(
-//                        DataResult.error<OnLocationChanged>(
-//                            DomainError.LocationServiceError(message = it)
-//                        )
-//                    )
-//                },
-//                onEvent = { location ->
-//                    Timber.d("Location discovered: $location")
-//                    continuation.resume(DataResult.ready(location))
-//                }
-//            )
-//        }
-//
-//        consumerId?.let {
-//            service.removeConsumer(it)
-//            Timber.d("Location consumer ($it) removed")
-//        }
-//
-//        return locationResult
-//    }
 
     private fun getCachedResultOrError(): DataResult<DeviceLocation> = lastLocationCache.value
         .takeIf(DataResult<*>::isReady)

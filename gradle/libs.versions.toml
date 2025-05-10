@@ -35,7 +35,8 @@ androidxTestExt = "1.2.1"
 androidxTest = "1.6.2"
 coroutinesTest = "1.8.0"
 composeTest = "1.8.1"
-mockk = "1.13.8"
+mockk = "1.14.2"
+turbine = "1.2.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -100,6 +101,7 @@ test-compose-ui = { module = "androidx.compose.ui:ui-test-junit4", version.ref =
 test-compose-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 test-mockk = { module = "io.mockk:mockk", version.ref = "mockk"}
 test-mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk"}
+test-turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 
 [bundles]
 androidx-lifeycle = ["androidx-lifecycle-runtime-compose", "androidx-lifecycle-viewmodel-compose"]
@@ -124,7 +126,8 @@ test-core = [
     "test-androidx-junit-ext",
     "test-androidx-core",
     "test-coroutines",
-    "test-mockk"
+    "test-mockk",
+    "test-turbine"
 ]
 test-instrumented-extras = [
     "test-androidx-runner",

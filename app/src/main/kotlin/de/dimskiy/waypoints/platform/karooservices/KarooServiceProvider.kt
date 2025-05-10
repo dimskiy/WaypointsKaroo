@@ -76,14 +76,20 @@ class KarooServiceProvider(
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun awaitServiceConnection() = suspendCancellableCoroutine { continuation ->
         karooService.connect { isConnected ->
-            if (isConnected) {
-                continuation.resume(Unit) {
-                    Timber.d(it, "Service preparation cancelled")
+            when {
+                isConnected && continuation.isActive -> {
+                    continuation.resume(Unit) {
+                        Timber.d(it, "Service preparation cancelled")
+                    }
                 }
-            } else {
-                val errorMsg = "Cannot connect to Karoo service"
-                Timber.e(errorMsg)
-                continuation.resumeWithException(IllegalStateException(errorMsg))
+
+                !isConnected && continuation.isActive -> {
+                    val errorMsg = "Cannot connect to Karoo service"
+                    Timber.e(errorMsg)
+                    continuation.resumeWithException(IllegalStateException(errorMsg))
+                }
+
+                else -> Timber.d("Attempt to resume completed coroutine, skipping")
             }
         }
     }
