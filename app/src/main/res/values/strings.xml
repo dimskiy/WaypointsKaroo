@@ -3,11 +3,12 @@
     <string name="photon_api_base_url" translatable="false">"https://photon.komoot.io/"</string>
     <string name="app_name" translatable="false">Waypoints</string>
 
-    <string name="widget_search_placeholder">Place name, type or address</string>
+<!--    max 16 chars-->
+    <string name="widget_search_placeholder">Name or address</string>
     <string name="search_button_description">Open search</string>
     <string name="back_button_description">Go back</string>
     <string name="error_msg_generic">Something went wrong :(</string>
-    <string name="error_msg_network_timeout">Internet request timeout. Free APIs can be unresponsive at times, please try again shortly</string>
+    <string name="error_msg_network_timeout">Internet request timeout.\nFree APIs can\u00A0be unresponsive at\u00A0times, please try\u00A0again shortly</string>
     <string name="error_msg_no_location">Cannot find your GPS location.\nTry to move around</string>
     <string name="message_nothing_found">No results found yet</string>
     <string name="img_description_bookmarked_sign">Bookmarked sign</string>
@@ -15,7 +16,7 @@
     <string name="label_search_by_location">From current location</string>
     <string name="label_search_by_location_explain">Shares device location with %1s</string>
     <string name="message_finding_the_location">Discovering device location</string>
-    <string name="description_navigate_back">Navigate back</string>
+    <string name="description_navigate_back" translatable="false">Navigate back</string>
     <string name="distance_miles_formatted">%1s\nmi</string>
     <string name="distance_km_formatted">%1s\nkm</string>
     <string name="distance_feet_formatted">%1s\nft</string>

@@ -4,8 +4,11 @@ kotlin = "2.1.10"
 ksp = "2.1.10-1.0.31"
 
 androidxCore = "1.16.0"
-androidxLifecycle = "2.9.0"
-androidxComposeBom = "2025.05.00"
+
+# Lifecycle 2.9.0 + compose BOM 2025.05.00 causes SearchWidget focus issues
+androidxLifecycle = "2.8.7"
+androidxComposeBom = "2024.03.00"
+
 androidxStartup = "1.2.0"
 karooVersion = "1.1.5"
 appcompat = "1.7.0"

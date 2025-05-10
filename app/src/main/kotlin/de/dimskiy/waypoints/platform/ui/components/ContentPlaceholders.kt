@@ -30,7 +30,7 @@ import de.dimskiy.waypoints.platform.ui.theme.AppTheme
 @PreviewOnKaroo2
 @Composable
 fun InfoContentPreview() {
-    AppTheme(darkTheme = true) {
+    AppTheme(darkTheme = false) {
         InfoContentWidget("Some messageeeeeeeeeeeee with reaaaaaaaaaaaaaaaaaaally long teeeeeext")
     }
 }
@@ -38,7 +38,7 @@ fun InfoContentPreview() {
 @PreviewOnKaroo2
 @Composable
 fun ErrorContentPreview() {
-    AppTheme(darkTheme = true) {
+    AppTheme(darkTheme = false) {
         ErrorContentWidget("Some error")
     }
 }
@@ -66,8 +66,8 @@ fun LoadingContentWidget(model: DataResult.Loading? = null, modifier: Modifier =
         Box(
             contentAlignment = Alignment.TopCenter,
             modifier = Modifier
-                .padding(top = 10.dp)
-                .fillMaxSize(),
+                .padding(10.dp)
+                .fillMaxSize()
         ) {
             Column(
                 modifier = Modifier
@@ -92,7 +92,7 @@ fun LoadingContentWidget(model: DataResult.Loading? = null, modifier: Modifier =
                 ) {
                     Text(
                         text = model?.message.orEmpty(),
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleSmall,
                         textAlign = TextAlign.Center,
                         softWrap = true,
                         modifier = Modifier
@@ -136,7 +136,7 @@ private fun ContentWidget(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(top = 5.dp)
+                    .padding(vertical = 5.dp, horizontal = 10.dp)
             ) {
                 Box(
                     modifier = Modifier.fillMaxWidth()
@@ -158,7 +158,7 @@ private fun ContentWidget(
                 ) {
                     Text(
                         text = message,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleSmall,
                         textAlign = TextAlign.Center,
                         softWrap = true,
                         modifier = Modifier
