@@ -1,12 +1,11 @@
 package de.dimskiy.waypoints.platform.settings
 
-import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
-import dagger.hilt.android.qualifiers.ApplicationContext
 import de.dimskiy.waypoints.domain.model.DeviceLocation
 import de.dimskiy.waypoints.domain.providers.SettingsProvider
 import de.dimskiy.waypoints.platform.di.BaseModule
@@ -19,15 +18,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class SettingsProviderImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val prefsDatastore: DataStore<Preferences>,
     @BaseModule.DispatcherIO private val coroutinesDispatcher: CoroutineDispatcher
 ) : SettingsProvider {
 
-    private val Context.dataStore by preferencesDataStore(name = "location_settings")
-
     private val json = Gson()
 
-    override fun observeLastLocation(): Flow<DeviceLocation?> = context.dataStore.data.map { data ->
+    override fun observeLastLocation(): Flow<DeviceLocation?> = prefsDatastore.data.map { data ->
         data[LAST_LOCATION_KEY]?.let { valueString ->
             val decoded = json.fromJson<DeviceLocation>(valueString, DeviceLocation::class.java)
             Timber.d("Reading $valueString to $decoded")
@@ -41,18 +38,18 @@ class SettingsProviderImpl @Inject constructor(
 
             Timber.d("Writing $lastLocation as $encoded")
 
-            context.dataStore.edit { prefs ->
+            prefsDatastore.edit { prefs ->
                 prefs[LAST_LOCATION_KEY] = encoded
             }
         }
     }
 
-    override fun observeGeoSearchEnabled(): Flow<Boolean> = context.dataStore.data.map { data ->
+    override fun observeGeoSearchEnabled(): Flow<Boolean> = prefsDatastore.data.map { data ->
         data[GEO_SEARCH_ENABLED_KEY] == true
     }
 
     override suspend fun setGeoSearchEnabled(isEnabled: Boolean) {
-        context.dataStore.edit { prefs ->
+        prefsDatastore.edit { prefs ->
             prefs[GEO_SEARCH_ENABLED_KEY] = isEnabled
         }
     }

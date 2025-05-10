@@ -1,6 +1,9 @@
 package de.dimskiy.waypoints.platform.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import dagger.Binds
 import dagger.Module
@@ -24,6 +27,8 @@ abstract class StorageModule {
     abstract fun bindSettingsProvider(impl: SettingsProviderImpl): SettingsProvider
 
     companion object {
+        private val Context.dataStore by preferencesDataStore(name = "location_settings")
+
         @Provides
         @Singleton
         fun provideWaypointsDao(@ApplicationContext context: Context): WaypointsDao {
@@ -36,6 +41,12 @@ abstract class StorageModule {
                 .build()
 
             return db.waypointDao()
+        }
+
+        @Provides
+        @Singleton
+        fun providePrefsDatastore(@ApplicationContext context: Context): DataStore<Preferences> {
+            return context.dataStore
         }
     }
 }
