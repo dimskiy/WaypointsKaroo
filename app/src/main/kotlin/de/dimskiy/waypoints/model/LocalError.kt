@@ -12,8 +12,7 @@ sealed class LocalError : Throwable() {
         override val message: String? = wrappedException?.message
     ) : LocalError()
 
-    data class KarooServiceError(
-        val wrappedException: Throwable? = null,
-        override val message: String? = wrappedException?.message
-    ) : LocalError()
+    data object KarooServiceError: LocalError() {
+        private fun readResolve(): Any = KarooServiceError
+    }
 }

@@ -24,7 +24,7 @@ fun <T> WithErrorDisplay(
         isDisplayError = false
     }
 
-    LaunchedEffect(errors) {
+    LaunchedEffect(errors.value) {
         isDisplayError = errors.value != null
     }
 

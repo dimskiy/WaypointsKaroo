@@ -12,11 +12,10 @@ class KarooPropertiesProvider @Inject constructor(
     private val karooServiceProvider: KarooServiceProvider,
 ) : EnvironmentPropertiesProvider {
 
-    override suspend fun isMeasureUnitMetric(): Boolean? =
+    override suspend fun isMeasureUnitMetric(): Boolean =
         karooServiceProvider.observeEvent<UserProfile>(
             eventParams = UserProfile.Params
-        )
-            .map { profile ->
+        ).map { profile ->
             Timber.d("User profile received: $profile")
             profile.preferredUnit.distance == UnitType.METRIC
         }.first()

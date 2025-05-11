@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.dimskiy.waypoints.DataResult
+import de.dimskiy.waypoints.domain.ErrorDisplayState
 import de.dimskiy.waypoints.domain.cases.GetDistanceToDeviceLocationCase
 import de.dimskiy.waypoints.domain.cases.ObserveSearchResultsCase
 import de.dimskiy.waypoints.domain.cases.ObserveWaypointsStoredCase
@@ -11,6 +12,7 @@ import de.dimskiy.waypoints.domain.cases.OpenExternalMap
 import de.dimskiy.waypoints.domain.cases.ToggleWaypointBookmarkCase
 import de.dimskiy.waypoints.domain.model.Waypoint
 import de.dimskiy.waypoints.domain.providers.SettingsProvider
+import de.dimskiy.waypoints.platform.errordisplay.catchWithErrorDisplay
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.SearchResponse
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.UserIntent
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.WaypointWithDistance
@@ -36,6 +38,7 @@ class WaypointsListViewModel @Inject constructor(
     private val getDistanceToDeviceLocation: GetDistanceToDeviceLocationCase,
     private val openExternalMap: OpenExternalMap,
     private val settingsProvider: SettingsProvider,
+    errorDisplayReceiver: ErrorDisplayState.Receiver,
     observeWaypointsStored: ObserveWaypointsStoredCase
 ) : ViewModel() {
 
@@ -62,20 +65,21 @@ class WaypointsListViewModel @Inject constructor(
                 geoSearchEnabled = geoSearchEnabled
             )
         )
-    }.onEach {
-        Timber.d("ViewState emission: $it")
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = WaypointsListState(
-            bookmarks = emptyList(),
-            searchResponse = SearchResponse(
-                dataResult = DataResult.ready(emptyList()),
-                providerName = observeSearchResults.providerName,
-                geoSearchEnabled = false
+    }
+        .onEach { Timber.d("ViewState emission: $it") }
+        .catchWithErrorDisplay(errorDisplayReceiver)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = WaypointsListState(
+                bookmarks = emptyList(),
+                searchResponse = SearchResponse(
+                    dataResult = DataResult.ready(emptyList()),
+                    providerName = observeSearchResults.providerName,
+                    geoSearchEnabled = false
+                )
             )
         )
-    )
 
     private suspend fun getUpdatedWithDistance(waypoints: List<Waypoint>): List<WaypointWithDistance> {
         val isGeoSearchEnabled = settingsProvider.observeGeoSearchEnabled().first()
