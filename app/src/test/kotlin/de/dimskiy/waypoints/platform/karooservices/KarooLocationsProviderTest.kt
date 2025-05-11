@@ -5,7 +5,7 @@ import app.cash.turbine.test
 import de.dimskiy.waypoints.DataResult
 import de.dimskiy.waypoints.R
 import de.dimskiy.waypoints.domain.model.DeviceLocation
-import de.dimskiy.waypoints.domain.model.DomainError
+import de.dimskiy.waypoints.model.LocalError
 import io.hammerhead.karooext.models.OnLocationChanged
 import io.mockk.coEvery
 import io.mockk.every
@@ -73,7 +73,7 @@ class KarooLocationsProviderTest {
 
             testDispatcher.scheduler.advanceTimeBy(11.seconds) // Advance beyond timeout
 
-            assertEquals(DataResult.error<DeviceLocation>(DomainError.LocationServiceError(message = "No location available.")), awaitItem())
+            assertEquals(DataResult.error<DeviceLocation>(LocalError.LocationServiceError(message = "No location available.")), awaitItem())
         }
     }
 
@@ -100,7 +100,7 @@ class KarooLocationsProviderTest {
 
         karooLocationsProvider.observeDeviceLocations().test {
             awaitItem() // Skip initial loading
-            assertEquals(DataResult.error<DeviceLocation>(DomainError.LocationServiceError(testError)), awaitItem())
+            assertEquals(DataResult.error<DeviceLocation>(LocalError.LocationServiceError(testError)), awaitItem())
         }
     }
 

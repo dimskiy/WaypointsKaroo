@@ -172,7 +172,7 @@ private fun SearchContent(
         Box {
             when (searchResponse.dataResult) {
                 is DataResult.Error -> {
-                    val errorMsg = searchResponse.dataResult.error.message
+                    val errorMsg = searchResponse.dataResult.error?.message
                         ?: stringResource(R.string.error_msg_generic)
 
                     ErrorContentWidget(errorMsg)

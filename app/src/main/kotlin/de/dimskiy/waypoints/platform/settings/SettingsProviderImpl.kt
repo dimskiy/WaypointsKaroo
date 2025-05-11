@@ -8,18 +8,13 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.google.gson.Gson
 import de.dimskiy.waypoints.domain.model.DeviceLocation
 import de.dimskiy.waypoints.domain.providers.SettingsProvider
-import de.dimskiy.waypoints.platform.di.BaseModule
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
 class SettingsProviderImpl @Inject constructor(
-    private val prefsDatastore: DataStore<Preferences>,
-    @BaseModule.DispatcherIO private val coroutinesDispatcher: CoroutineDispatcher
+    private val prefsDatastore: DataStore<Preferences>
 ) : SettingsProvider {
 
     private val json = Gson()
@@ -30,17 +25,13 @@ class SettingsProviderImpl @Inject constructor(
             Timber.d("Reading $valueString to $decoded")
             decoded
         }
-    }.flowOn(coroutinesDispatcher)
+    }
 
     override suspend fun saveLocation(lastLocation: DeviceLocation) {
-        withContext(coroutinesDispatcher) {
+        prefsDatastore.edit { prefs ->
             val encoded = json.toJson(lastLocation)
-
             Timber.d("Writing $lastLocation as $encoded")
-
-            prefsDatastore.edit { prefs ->
-                prefs[LAST_LOCATION_KEY] = encoded
-            }
+            prefs[LAST_LOCATION_KEY] = encoded
         }
     }
 
@@ -50,6 +41,7 @@ class SettingsProviderImpl @Inject constructor(
 
     override suspend fun setGeoSearchEnabled(isEnabled: Boolean) {
         prefsDatastore.edit { prefs ->
+            Timber.d("Setting geo-search enabled == $isEnabled")
             prefs[GEO_SEARCH_ENABLED_KEY] = isEnabled
         }
     }

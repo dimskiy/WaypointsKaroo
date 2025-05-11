@@ -1,7 +1,7 @@
 [versions]
-agp = "8.9.1"
-kotlin = "2.1.10"
-ksp = "2.1.10-1.0.31"
+agp = "8.9.2"
+kotlin = "2.1.20"
+ksp = "2.1.20-2.0.1"
 
 androidxCore = "1.16.0"
 
@@ -18,8 +18,8 @@ timber = "5.0.1"
 androidxHilt = "2.56"
 androidxHiltNav = "1.2.0"
 androidxNavigation = "2.8.9"
-androidxRoom = "2.6.1"
-androidxDatastore = "1.0.0"
+androidxRoom = "2.7.1"
+androidxDatastore = "1.1.6"
 
 googleGson = "2.13.1"
 swipeView = "1.0.1"

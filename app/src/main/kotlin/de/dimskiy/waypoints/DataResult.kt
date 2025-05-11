@@ -1,7 +1,5 @@
 package de.dimskiy.waypoints
 
-import de.dimskiy.waypoints.domain.model.DomainError
-
 sealed class DataResult<out T>() {
     open val data: T? = null
 
@@ -27,11 +25,11 @@ sealed class DataResult<out T>() {
         }
     }
 
-    fun getErrorIfAny(): DomainError? = if (this is Error) error else null
+    fun getErrorIfAny(): Throwable? = if (this is Error) error else null
 
     data class Loading(val message: String? = null) : DataResult<Nothing>()
 
-    data class Error<T>(val error: DomainError) : DataResult<T>()
+    data class Error<T>(val error: Throwable?) : DataResult<T>()
 
     data class Ready<T>(override val data: T) : DataResult<T>()
 
@@ -41,6 +39,6 @@ sealed class DataResult<out T>() {
 
         fun <T> ready(data: T) = Ready(data)
 
-        fun <T> error(error: DomainError) = Error<T>(error)
+        fun <T> error(error: Throwable?) = Error<T>(error)
     }
 }

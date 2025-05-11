@@ -1,19 +1,19 @@
-package de.dimskiy.waypoints.domain.model
+package de.dimskiy.waypoints.model
 
-sealed class DomainError : Throwable() {
+sealed class LocalError : Throwable() {
 
     data class NetworkError(
         val wrappedException: Throwable? = null,
         override val message: String? = wrappedException?.message
-    ) : DomainError()
+    ) : LocalError()
 
     data class LocationServiceError(
         val wrappedException: Throwable? = null,
         override val message: String? = wrappedException?.message
-    ) : DomainError()
+    ) : LocalError()
 
-    data class EnvironmentPropertiesError(
+    data class KarooServiceError(
         val wrappedException: Throwable? = null,
         override val message: String? = wrappedException?.message
-    ) : DomainError()
+    ) : LocalError()
 }
