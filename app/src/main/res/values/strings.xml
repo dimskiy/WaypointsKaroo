@@ -10,6 +10,7 @@
     <string name="error_msg_generic">Something went wrong :(</string>
     <string name="error_msg_network_timeout">Internet request timeout.\nFree APIs can\u00A0be unresponsive at\u00A0times, please try\u00A0again shortly</string>
     <string name="error_msg_no_location">Cannot find your GPS location.\nTry to move around</string>
+    <string name="error_msg_karoo_service_unavailable">Cannot connect to Karoo service.\nIs\u00A0it Karoo device?</string>
     <string name="message_nothing_found">No results found yet</string>
     <string name="img_description_bookmarked_sign">Bookmarked sign</string>
     <string name="message_no_bookmarks">No waypoints saved.\nPlease start with search</string>

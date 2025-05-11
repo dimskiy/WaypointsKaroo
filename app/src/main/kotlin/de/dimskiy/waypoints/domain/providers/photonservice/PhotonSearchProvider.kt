@@ -5,9 +5,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import de.dimskiy.waypoints.DataResult
 import de.dimskiy.waypoints.R
 import de.dimskiy.waypoints.domain.model.DeviceLocation
-import de.dimskiy.waypoints.domain.model.DomainError
 import de.dimskiy.waypoints.domain.model.Waypoint
 import de.dimskiy.waypoints.domain.providers.WaypointsSearchProvider
+import de.dimskiy.waypoints.model.LocalError
 import de.dimskiy.waypoints.platform.di.BaseModule
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.TimeoutCancellationException
@@ -66,11 +66,11 @@ class PhotonSearchProvider @Inject constructor(
             }
         } catch (e: TimeoutCancellationException) {
             DataResult.error(
-                DomainError.NetworkError(message = context.getString(R.string.error_msg_network_timeout))
+                LocalError.NetworkError(message = context.getString(R.string.error_msg_network_timeout))
             )
 
         } catch (e: Exception) {
-            DataResult.error(DomainError.NetworkError(e))
+            DataResult.error(LocalError.NetworkError(e))
         }
 
     private fun mapToWaypoint(featureDto: FeatureDto): Waypoint.Discovered? {

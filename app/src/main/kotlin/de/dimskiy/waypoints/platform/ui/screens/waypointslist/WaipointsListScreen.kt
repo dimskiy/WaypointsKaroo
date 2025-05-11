@@ -13,16 +13,20 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.dimskiy.waypoints.DataResult
 import de.dimskiy.waypoints.R
+import de.dimskiy.waypoints.domain.ErrorDisplayState
 import de.dimskiy.waypoints.domain.model.Waypoint
+import de.dimskiy.waypoints.platform.errordisplay.ErrorDisplayStateImpl
 import de.dimskiy.waypoints.platform.ui.PreviewOnKaroo2
 import de.dimskiy.waypoints.platform.ui.components.InfoContentWidget
 import de.dimskiy.waypoints.platform.ui.components.NavigationOverlay
 import de.dimskiy.waypoints.platform.ui.components.WaypointBookmarkItem
+import de.dimskiy.waypoints.platform.ui.components.WithErrorDisplay
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.SearchResponse
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.UserIntent
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.WaypointsListState
@@ -75,7 +79,8 @@ fun WaypointsListPreview() {
                     false
                 )
             ),
-            onUserIntent = {}
+            onUserIntent = {},
+            errorDisplayState = ErrorDisplayStateImpl(LocalContext.current)
         )
     }
 }
@@ -85,7 +90,7 @@ fun WaypointsListPreview() {
 fun WaypointsListEmptyPreview() {
     AppTheme(darkTheme = true) {
         WaypointsListScreenContent(
-            WaypointsListState(
+            viewState = WaypointsListState(
                 bookmarks = emptyList(),
                 searchResponse = SearchResponse(
                     DataResult.ready(emptyList()),
@@ -93,7 +98,8 @@ fun WaypointsListEmptyPreview() {
                     false
                 )
             ),
-            {}
+            onUserIntent = {},
+            errorDisplayState = ErrorDisplayStateImpl(LocalContext.current)
         )
     }
 }
@@ -102,13 +108,15 @@ fun WaypointsListEmptyPreview() {
 @Composable
 fun WaypointsListScreen(
     viewModel: WaypointsListViewModel = hiltViewModel(),
+    errorDisplayState: ErrorDisplayState
 ) {
     val viewState = viewModel.viewState.collectAsState()
 
     NavigationOverlay {
         WaypointsListScreenContent(
             viewState = viewState.value,
-            onUserIntent = viewModel::onUserIntent
+            onUserIntent = viewModel::onUserIntent,
+            errorDisplayState = errorDisplayState
         )
     }
 }
@@ -116,7 +124,8 @@ fun WaypointsListScreen(
 @Composable
 fun WaypointsListScreenContent(
     viewState: WaypointsListState,
-    onUserIntent: (UserIntent) -> Unit
+    onUserIntent: (UserIntent) -> Unit,
+    errorDisplayState: ErrorDisplayState
 ) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerLow
@@ -135,28 +144,35 @@ fun WaypointsListScreenContent(
                     .wrapContentHeight()
             )
 
-            if (viewState.bookmarks.isNotEmpty()) {
-                val itemsBookmarked = viewState.bookmarks
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 10.dp)
-                        .padding(horizontal = 5.dp),
-                ) {
-                    items(count = itemsBookmarked.size, key = { itemsBookmarked[it].id }) { pos ->
-                        WaypointBookmarkItem(
-                            model = itemsBookmarked[pos],
-                            onUserIntent = onUserIntent,
-                        )
-                    }
+            WithErrorDisplay(
+                normalStateData = viewState,
+                errorState = errorDisplayState
+            ) {
+                if (viewState.bookmarks.isNotEmpty()) {
+                    val itemsBookmarked = viewState.bookmarks
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 10.dp)
+                            .padding(horizontal = 5.dp),
+                    ) {
+                        items(
+                            count = itemsBookmarked.size,
+                            key = { itemsBookmarked[it].id }) { pos ->
+                            WaypointBookmarkItem(
+                                model = itemsBookmarked[pos],
+                                onUserIntent = onUserIntent,
+                            )
+                        }
 
-                    item {
-                        Spacer(modifier = Modifier.height(60.dp))
+                        item {
+                            Spacer(modifier = Modifier.height(60.dp))
+                        }
                     }
+                } else {
+                    InfoContentWidget(stringResource(R.string.message_no_bookmarks))
                 }
-            } else {
-                InfoContentWidget(stringResource(R.string.message_no_bookmarks))
             }
         }
     }
