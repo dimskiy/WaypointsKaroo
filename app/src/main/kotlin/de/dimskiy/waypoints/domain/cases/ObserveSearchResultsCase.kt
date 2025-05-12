@@ -9,7 +9,7 @@ import de.dimskiy.waypoints.domain.providers.ReportingProvider
 import de.dimskiy.waypoints.domain.providers.SettingsProvider
 import de.dimskiy.waypoints.domain.providers.WaypointsSearchProvider
 import de.dimskiy.waypoints.domain.waypointsrepository.WaypointsRepository
-import de.dimskiy.waypoints.model.LocalError
+import de.dimskiy.waypoints.model.LocalException
 import de.dimskiy.waypoints.platform.di.BaseModule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.awaitCancellation
@@ -84,7 +84,7 @@ class ObserveSearchResultsCase @Inject constructor(
                             location = deviceLocation
                         )
                     }
-                } ?: flowOf(DataResult.error(LocalError.LocationServiceError()))
+                } ?: flowOf(DataResult.error(LocalException.LocationServiceException()))
             }
         }
     }

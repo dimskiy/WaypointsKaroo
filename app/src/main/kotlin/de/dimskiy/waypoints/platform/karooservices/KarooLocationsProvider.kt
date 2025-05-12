@@ -6,7 +6,7 @@ import de.dimskiy.waypoints.DataResult
 import de.dimskiy.waypoints.R
 import de.dimskiy.waypoints.domain.model.DeviceLocation
 import de.dimskiy.waypoints.domain.providers.LocationsProvider
-import de.dimskiy.waypoints.model.LocalError
+import de.dimskiy.waypoints.model.LocalException
 import de.dimskiy.waypoints.platform.di.BaseModule
 import io.hammerhead.karooext.models.OnLocationChanged
 import kotlinx.coroutines.CoroutineDispatcher
@@ -57,7 +57,7 @@ class KarooLocationsProvider @Inject constructor(
                     Timber.d("Device location discovery TIMEOUT")
                     emit(getCachedResultOrError())
                 } else {
-                    emit(DataResult.error(LocalError.LocationServiceError(it)))
+                    emit(DataResult.error(LocalException.LocationServiceException(it)))
                 }
             }
             .onStart { emit(DataResult.loading(context.getString(R.string.message_finding_the_location))) }
@@ -69,7 +69,7 @@ class KarooLocationsProvider @Inject constructor(
             cachedLocation
         }
         ?: DataResult.error(
-            LocalError.LocationServiceError(
+            LocalException.LocationServiceException(
                 message = context.getString(R.string.error_msg_no_location)
             )
         )

@@ -1,6 +1,6 @@
 package de.dimskiy.waypoints.platform.karooservices
 
-import de.dimskiy.waypoints.model.LocalError
+import de.dimskiy.waypoints.model.LocalException
 import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.models.KarooEvent
 import io.hammerhead.karooext.models.KarooEventParams
@@ -78,7 +78,7 @@ class KarooServiceProvider(
     private suspend fun awaitServiceConnection() = suspendCancellableCoroutine { continuation ->
         if (karooService.libVersion.isNullOrEmpty()) {
             Timber.e("Karoo service not found - is running on Karoo device?")
-            continuation.resumeWithException(LocalError.KarooServiceError)
+            continuation.resumeWithException(LocalException.KarooServiceException)
         }
 
         karooService.connect { isConnected ->
@@ -91,7 +91,7 @@ class KarooServiceProvider(
 
                 !isConnected && continuation.isActive -> {
                     Timber.e("Cannot connect to Karoo service while the service apparently present")
-                    continuation.resumeWithException(LocalError.KarooServiceError)
+                    continuation.resumeWithException(LocalException.KarooServiceException)
                 }
 
                 else -> Timber.d("Attempt to resume completed coroutine, skipping")

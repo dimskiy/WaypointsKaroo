@@ -10,7 +10,7 @@ import de.dimskiy.waypoints.domain.providers.ReportingProvider
 import de.dimskiy.waypoints.domain.providers.SettingsProvider
 import de.dimskiy.waypoints.domain.providers.WaypointsSearchProvider
 import de.dimskiy.waypoints.domain.waypointsrepository.WaypointsRepository
-import de.dimskiy.waypoints.model.LocalError
+import de.dimskiy.waypoints.model.LocalException
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -173,7 +173,7 @@ class ObserveSearchResultsCaseTest {
     fun `location error WHEN geoSearchEnabled AND lastLocation obsolete AND locationProvider error`() =
         runTest(testDispatcher) {
             val query = "test"
-            val expectedError = LocalError.LocationServiceError()
+            val expectedError = LocalException.LocationServiceException()
 
             every { settingsProviderMock.observeGeoSearchEnabled() } returns flowOf(true)
             every { settingsProviderMock.observeLastLocation() } returns flowOf(null)
@@ -201,7 +201,7 @@ class ObserveSearchResultsCaseTest {
     fun `search error WHEN geoSearchEnabled AND lastLocation not obsolete AND searchProvider error`() =
         runTest(testDispatcher) {
             val query = "test"
-            val expectedError = LocalError.NetworkError()
+            val expectedError = LocalException.NetworkException()
             val expectedLocation = DeviceLocation(1.0, 2.0, currentTimestampMs)
 
             every { settingsProviderMock.observeGeoSearchEnabled() } returns flowOf(true)
@@ -229,7 +229,7 @@ class ObserveSearchResultsCaseTest {
     fun `search error WHEN geoSearchDisabled AND searchProvider error`() =
         runTest(testDispatcher) {
             val query = "test"
-            val expectedError = LocalError.NetworkError()
+            val expectedError = LocalException.NetworkException()
 
             every { settingsProviderMock.observeGeoSearchEnabled() } returns flowOf(false)
             coEvery {

@@ -13,15 +13,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.dimskiy.waypoints.DataResult
 import de.dimskiy.waypoints.R
-import de.dimskiy.waypoints.domain.ErrorDisplayState
 import de.dimskiy.waypoints.domain.model.Waypoint
-import de.dimskiy.waypoints.platform.errordisplay.ErrorDisplayStateImpl
 import de.dimskiy.waypoints.platform.ui.PreviewOnKaroo2
 import de.dimskiy.waypoints.platform.ui.components.InfoContentWidget
 import de.dimskiy.waypoints.platform.ui.components.NavigationOverlay
@@ -80,7 +77,6 @@ fun WaypointsListPreview() {
                 )
             ),
             onUserIntent = {},
-            errorDisplayState = ErrorDisplayStateImpl(LocalContext.current)
         )
     }
 }
@@ -99,24 +95,19 @@ fun WaypointsListEmptyPreview() {
                 )
             ),
             onUserIntent = {},
-            errorDisplayState = ErrorDisplayStateImpl(LocalContext.current)
         )
     }
 }
 //endregion
 
 @Composable
-fun WaypointsListScreen(
-    viewModel: WaypointsListViewModel = hiltViewModel(),
-    errorDisplayState: ErrorDisplayState
-) {
+fun WaypointsListScreen(viewModel: WaypointsListViewModel = hiltViewModel()) {
     val viewState = viewModel.viewState.collectAsState()
 
     NavigationOverlay {
         WaypointsListScreenContent(
             viewState = viewState.value,
             onUserIntent = viewModel::onUserIntent,
-            errorDisplayState = errorDisplayState
         )
     }
 }
@@ -125,7 +116,6 @@ fun WaypointsListScreen(
 fun WaypointsListScreenContent(
     viewState: WaypointsListState,
     onUserIntent: (UserIntent) -> Unit,
-    errorDisplayState: ErrorDisplayState
 ) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerLow
@@ -144,10 +134,7 @@ fun WaypointsListScreenContent(
                     .wrapContentHeight()
             )
 
-            WithErrorDisplay(
-                normalStateData = viewState,
-                errorState = errorDisplayState
-            ) {
+            WithErrorDisplay(nonErrorStateKey = viewState) {
                 if (viewState.bookmarks.isNotEmpty()) {
                     val itemsBookmarked = viewState.bookmarks
                     LazyColumn(
