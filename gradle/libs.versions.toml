@@ -35,7 +35,7 @@ androidxTestExt = "1.2.1"
 androidxTest = "1.6.2"
 coroutinesTest = "1.8.0"
 composeTest = "1.8.1"
-mockk = "1.13.8"
+mockk = "1.14.2"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
