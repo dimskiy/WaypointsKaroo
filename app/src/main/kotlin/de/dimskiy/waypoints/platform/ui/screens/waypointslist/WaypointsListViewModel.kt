@@ -13,6 +13,7 @@ import de.dimskiy.waypoints.domain.cases.ToggleWaypointBookmarkCase
 import de.dimskiy.waypoints.domain.model.Waypoint
 import de.dimskiy.waypoints.domain.providers.SettingsProvider
 import de.dimskiy.waypoints.platform.errordisplay.catchWithUserInformer
+import de.dimskiy.waypoints.platform.errordisplay.flatMapWithUserInformer
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.SearchResponse
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.UserIntent
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.WaypointWithDistance
@@ -54,7 +55,7 @@ class WaypointsListViewModel @Inject constructor(
 
     val viewState: StateFlow<WaypointsListState> = combine(
         observeWaypointsStored(),
-        searchResults,
+        searchResults.flatMapWithUserInformer(userInformer),
         settingsProvider.observeGeoSearchEnabled()
     ) { bookmarks, searchResult, geoSearchEnabled ->
         WaypointsListState(

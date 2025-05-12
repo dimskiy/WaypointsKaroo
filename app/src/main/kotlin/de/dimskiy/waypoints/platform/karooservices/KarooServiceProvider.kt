@@ -76,11 +76,6 @@ class KarooServiceProvider(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun awaitServiceConnection() = suspendCancellableCoroutine { continuation ->
-        if (karooService.libVersion.isNullOrEmpty()) {
-            Timber.e("Karoo service not found - is running on Karoo device?")
-            continuation.resumeWithException(LocalException.KarooServiceException)
-        }
-
         karooService.connect { isConnected ->
             when {
                 isConnected && continuation.isActive -> {

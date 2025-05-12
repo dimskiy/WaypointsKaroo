@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.timeout
+import kotlinx.coroutines.flow.update
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
@@ -34,9 +35,7 @@ class KarooLocationsProvider @Inject constructor(
     @BaseModule.TimeProvider private val currentTimeProvider: Provider<Long>
 ) : LocationsProvider {
 
-    private val lastLocationCache = MutableStateFlow<DataResult<DeviceLocation>>(
-        DataResult.loading(context.getString(R.string.message_finding_the_location))
-    )
+    private val lastLocationCache = MutableStateFlow<DeviceLocation?>(null)
 
     @OptIn(FlowPreview::class)
     override fun observeDeviceLocations(): Flow<DataResult<DeviceLocation>> =
@@ -44,31 +43,29 @@ class KarooLocationsProvider @Inject constructor(
             .flowOn(coroutineDispatcher)
             .timeout(GPS_SEARCH_TIMEOUT_SEC.seconds)
             .map<OnLocationChanged, DataResult<DeviceLocation>> { onLocationChangeResponse ->
-                val deviceLocation = DeviceLocation(
-                    latitude = onLocationChangeResponse.lat,
-                    longitude = onLocationChangeResponse.lng,
-                    timestamp = currentTimeProvider.get()
+                DataResult.ready(
+                    DeviceLocation(
+                        latitude = onLocationChangeResponse.lat,
+                        longitude = onLocationChangeResponse.lng,
+                        timestamp = currentTimeProvider.get()
+                    )
                 )
-                DataResult.ready(deviceLocation)
             }
-            .onEach(lastLocationCache::emit)
-            .catch {
-                if (it is TimeoutCancellationException) {
+            .onEach { locationResult -> lastLocationCache.update { locationResult.data } }
+            .catch { error ->
+                if (error is TimeoutCancellationException) {
                     Timber.d("Device location discovery TIMEOUT")
                     emit(getCachedResultOrError())
                 } else {
-                    emit(DataResult.error(LocalException.LocationServiceException(it)))
+                    emit(DataResult.error(LocalException.LocationServiceException(error)))
                 }
             }
             .onStart { emit(DataResult.loading(context.getString(R.string.message_finding_the_location))) }
 
-    private fun getCachedResultOrError(): DataResult<DeviceLocation> = lastLocationCache.value
-        .takeIf(DataResult<*>::isReady)
-        ?.let { cachedLocation ->
-            Timber.d("Using cached location: $cachedLocation")
-            cachedLocation
-        }
-        ?: DataResult.error(
+    private fun getCachedResultOrError(): DataResult<DeviceLocation> =
+        lastLocationCache.value?.let {
+            DataResult.ready(it)
+        } ?: DataResult.error(
             LocalException.LocationServiceException(
                 message = context.getString(R.string.error_msg_no_location)
             )

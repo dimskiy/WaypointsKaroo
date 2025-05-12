@@ -23,7 +23,6 @@ import de.dimskiy.waypoints.platform.ui.PreviewOnKaroo2
 import de.dimskiy.waypoints.platform.ui.components.InfoContentWidget
 import de.dimskiy.waypoints.platform.ui.components.NavigationOverlay
 import de.dimskiy.waypoints.platform.ui.components.WaypointBookmarkItem
-import de.dimskiy.waypoints.platform.ui.components.WithErrorDisplay
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.SearchResponse
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.UserIntent
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.WaypointsListState
@@ -134,32 +133,30 @@ fun WaypointsListScreenContent(
                     .wrapContentHeight()
             )
 
-            WithErrorDisplay(nonErrorStateKey = viewState) {
-                if (viewState.bookmarks.isNotEmpty()) {
-                    val itemsBookmarked = viewState.bookmarks
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top = 10.dp)
-                            .padding(horizontal = 5.dp),
-                    ) {
-                        items(
-                            count = itemsBookmarked.size,
-                            key = { itemsBookmarked[it].id }) { pos ->
-                            WaypointBookmarkItem(
-                                model = itemsBookmarked[pos],
-                                onUserIntent = onUserIntent,
-                            )
-                        }
-
-                        item {
-                            Spacer(modifier = Modifier.height(60.dp))
-                        }
+            if (viewState.bookmarks.isNotEmpty()) {
+                val itemsBookmarked = viewState.bookmarks
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 10.dp)
+                        .padding(horizontal = 5.dp),
+                ) {
+                    items(
+                        count = itemsBookmarked.size,
+                        key = { itemsBookmarked[it].id }) { pos ->
+                        WaypointBookmarkItem(
+                            model = itemsBookmarked[pos],
+                            onUserIntent = onUserIntent,
+                        )
                     }
-                } else {
-                    InfoContentWidget(stringResource(R.string.message_no_bookmarks))
+
+                    item {
+                        Spacer(modifier = Modifier.height(60.dp))
+                    }
                 }
+            } else {
+                InfoContentWidget(stringResource(R.string.message_no_bookmarks))
             }
         }
     }

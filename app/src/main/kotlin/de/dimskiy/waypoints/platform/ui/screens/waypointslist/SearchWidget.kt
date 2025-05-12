@@ -42,6 +42,7 @@ import de.dimskiy.waypoints.platform.ui.components.DiscoveredListItem
 import de.dimskiy.waypoints.platform.ui.components.ErrorContentWidget
 import de.dimskiy.waypoints.platform.ui.components.InfoContentWidget
 import de.dimskiy.waypoints.platform.ui.components.LoadingContentWidget
+import de.dimskiy.waypoints.platform.ui.components.WithErrorDisplay
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.SearchResponse
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.UserIntent
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.WaypointWithDistance
@@ -112,10 +113,12 @@ fun SearchWidget(
         },
         modifier = modifier.fillMaxWidth(),
     ) {
-        SearchContent(
-            searchResponse = searchResponse,
-            onUserIntent = onUserIntent,
-        )
+        WithErrorDisplay(nonErrorStateKey = searchResponse) {
+            SearchContent(
+                searchResponse = searchResponse,
+                onUserIntent = onUserIntent,
+            )
+        }
     }
 }
 

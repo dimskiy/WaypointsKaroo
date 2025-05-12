@@ -9,7 +9,6 @@ import de.dimskiy.waypoints.domain.providers.ReportingProvider
 import de.dimskiy.waypoints.domain.providers.SettingsProvider
 import de.dimskiy.waypoints.domain.providers.WaypointsSearchProvider
 import de.dimskiy.waypoints.domain.waypointsrepository.WaypointsRepository
-import de.dimskiy.waypoints.model.LocalException
 import de.dimskiy.waypoints.platform.di.BaseModule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.awaitCancellation
@@ -58,10 +57,12 @@ class ObserveSearchResultsCase @Inject constructor(
         resultsLanguageCode: String
     ): Flow<DataResult<List<Waypoint>>> {
         return settingsProvider.observeLastLocation().flatMapLatest { lastLocation ->
-            if (isLastLocationObsolete(lastLocation)) {
+            if (lastLocation == null || isLastLocationObsolete(lastLocation)) {
                 Timber.d("Location cache obsolete - discovering new...")
-                locationProvider.observeDeviceLocations().onEach {
-                    it.data?.let { settingsProvider.saveLocation(it) }
+                locationProvider.observeDeviceLocations().onEach { locationResult ->
+                    locationResult.data?.let {
+                        settingsProvider.saveLocation(it)
+                    }
                 }
 
             } else {
@@ -75,16 +76,16 @@ class ObserveSearchResultsCase @Inject constructor(
 
                 is DataResult.Loading -> flowOf(locationResult)
 
-                is DataResult.Ready -> locationResult.data?.let { deviceLocation ->
+                is DataResult.Ready -> {
                     Timber.d("Performing geo-search...")
                     getSearchFlow {
                         searchProvider.searchWaypointsWithLocation(
                             query = query,
                             resultsLanguageCode = resultsLanguageCode,
-                            location = deviceLocation
+                            location = locationResult.data
                         )
                     }
-                } ?: flowOf(DataResult.error(LocalException.LocationServiceException()))
+                }
             }
         }
     }
