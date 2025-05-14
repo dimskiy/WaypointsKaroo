@@ -82,6 +82,7 @@ jobs:
 
       - name: Commit changes
         run: |
+          NEW_VERSION_NAME="${{ github.event.inputs.version }}"
           git config user.name "GitHub Actions"
           git commit -m "Release $NEW_VERSION_NAME"
           git push
