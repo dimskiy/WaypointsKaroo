@@ -126,7 +126,6 @@ afterEvaluate {
             val versionName = project.properties["APP_VERSION_NAME"].toString()
             val packageName = project.properties["APPLICATION_ID"].toString()
             val description = getSectionText("## Description")
-            val releaseNotes = getSectionText("## Release notes")
 
             val jsonContent = manifestTemplateFile.readText()
             val jsonElement = JsonParser.parseString(jsonContent)
@@ -136,7 +135,6 @@ afterEvaluate {
             jsonObject.addProperty("latestVersion", versionName)
             jsonObject.addProperty("packageName", packageName)
             jsonObject.addProperty("description", description)
-            jsonObject.addProperty("releaseNotes", releaseNotes)
 
             outputFile.get().asFile.parentFile.mkdirs()
             outputFile.get().asFile.writeText(jsonObject.toString())

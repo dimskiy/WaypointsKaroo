@@ -9,11 +9,9 @@ on:
       version:
         description: 'Enter app version name'
         required: true
-        default: '1.0'
       release_notes:
         description: 'Enter release notes'
         required: true
-        default: 'Some feature added.\nAnother bug fixed'
 
 jobs:
   build-release:
@@ -37,7 +35,6 @@ jobs:
           jq '.releaseNotes = env.RELEASE_NOTES' manifest-karoo-template.json > manifest-karoo-temp.json
           mv manifest-karoo-temp.json manifest-karoo-template.json
 
-          git add manifest-karoo-template.json
         env:
           RELEASE_NOTES: ${{ github.event.inputs.release_notes }}
 
@@ -56,7 +53,7 @@ jobs:
           
           git config user.name "GitHub Actions"
           git add gradle.properties
-          git commit -m "Release $NEW_VERSION_NAME:\n$RELEASE_NOTES"
+          git commit -m "Release $NEW_VERSION_NAME"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
