@@ -51,10 +51,7 @@ jobs:
           sed -i "s/APP_VERSION_CODE=$VERSION_CODE/APP_VERSION_CODE=$NEW_VERSION_CODE/" gradle.properties
           sed -i "s/APP_VERSION_NAME=$CURRENT_VERSION_NAME/APP_VERSION_NAME=$NEW_VERSION_NAME/" gradle.properties
           
-          git config user.name "GitHub Actions"
           git add gradle.properties
-          git commit -m "Release $NEW_VERSION_NAME"
-          git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -82,6 +79,14 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEYSTORE_FILE: keystore.jks
+
+      - name: Commit changes
+        run: |
+          git config user.name "GitHub Actions"
+          git commit -m "Release $NEW_VERSION_NAME"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
