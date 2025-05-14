@@ -21,7 +21,6 @@ import de.dimskiy.waypoints.R
 import de.dimskiy.waypoints.domain.model.Waypoint
 import de.dimskiy.waypoints.platform.ui.PreviewOnKaroo2
 import de.dimskiy.waypoints.platform.ui.components.InfoContentWidget
-import de.dimskiy.waypoints.platform.ui.components.NavigationOverlay
 import de.dimskiy.waypoints.platform.ui.components.WaypointBookmarkItem
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.SearchResponse
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.model.UserIntent
@@ -105,12 +104,10 @@ fun WaypointsListScreen(
 ) {
     val viewState = viewModel.viewState.collectAsState()
 
-    NavigationOverlay {
-        WaypointsListScreenContent(
-            viewState = viewState.value,
-            onUserIntent = viewModel::onUserIntent
-        )
-    }
+    WaypointsListScreenContent(
+        viewState = viewState.value,
+        onUserIntent = viewModel::onUserIntent
+    )
 }
 
 @Composable

@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import de.dimskiy.waypoints.platform.ui.components.NavigationOverlay
 import de.dimskiy.waypoints.platform.ui.screens.Screen
 import de.dimskiy.waypoints.platform.ui.screens.waypointslist.WaypointsListScreen
 import de.dimskiy.waypoints.platform.ui.theme.AppTheme
@@ -39,7 +40,9 @@ class MainActivity : ComponentActivity() {
                     exitTransition = { ExitTransition.None }
                 ) {
                     composable(Screen.WaypointsList.route) {
-                        WaypointsListScreen()
+                        NavigationOverlay {
+                            WaypointsListScreen()
+                        }
                     }
                 }
             }
