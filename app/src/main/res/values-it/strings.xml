@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    max 16 chars-->
+    <string name="widget_search_placeholder">Nome o indirizzo</string>
+    <string name="search_button_description">Apri ricerca</string>
+    <string name="back_button_description">Torna indietro</string>
+    <string name="error_msg_generic">Qualcosa è andato storto :(</string>
+    <string name="error_msg_network_timeout">Timeout richiesta Internet.\nLe API gratuite possono\u00A0essere\u00A0lente a\u00A0volte, riprova\u00A0tra\u00A0poco</string>
+    <string name="error_msg_no_location">Impossibile trovare la tua posizione GPS.\nProva a spostarti</string>
+    <string name="message_nothing_found">Nessun risultato trovato</string>
+    <string name="img_description_bookmarked_sign">Segnalibro</string> <!-- Or "Segnalibro salvato" if it's more about the action -->
+    <string name="message_no_bookmarks">Nessun waypoint salvato.\nInizia con una ricerca</string>
+    <string name="label_search_by_location">Dalla posizione attuale</string>
+    <string name="label_search_by_location_explain">Posizione condivisa con %1s</string>
+    <string name="message_finding_the_location">Rilevamento posizione dispositivo</string>
+    <string name="description_navigate_back" translatable="false">Navigate back</string> <!-- As per original, not translated -->
+    <string name="distance_miles_formatted">%1s\nmi</string> <!-- "mi" is standard for miles, but if you prefer "miglia" you can change it -->
+    <string name="distance_km_formatted">%1s\nkm</string>
+    <string name="distance_feet_formatted">%1s\npd</string> <!-- "pd" for "piedi" (feet) -->
+    <string name="distance_meters_formatted">%1s\nm</string>
+</resources>
